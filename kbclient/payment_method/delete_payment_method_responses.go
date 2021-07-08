@@ -7,12 +7,9 @@ package payment_method
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // DeletePaymentMethodReader is a Reader for the DeletePaymentMethod structure.
@@ -23,21 +20,26 @@ type DeletePaymentMethodReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *DeletePaymentMethodReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewDeletePaymentMethodNoContent()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewDeletePaymentMethodBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewDeletePaymentMethodNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,12 +48,11 @@ func NewDeletePaymentMethodNoContent() *DeletePaymentMethodNoContent {
 	return &DeletePaymentMethodNoContent{}
 }
 
-/*DeletePaymentMethodNoContent handles this case with default header values.
+/* DeletePaymentMethodNoContent describes a response with status code 204, with default header values.
 
 Successful operation
 */
 type DeletePaymentMethodNoContent struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *DeletePaymentMethodNoContent) Error() string {
@@ -68,12 +69,11 @@ func NewDeletePaymentMethodBadRequest() *DeletePaymentMethodBadRequest {
 	return &DeletePaymentMethodBadRequest{}
 }
 
-/*DeletePaymentMethodBadRequest handles this case with default header values.
+/* DeletePaymentMethodBadRequest describes a response with status code 400, with default header values.
 
 Invalid paymentMethodId supplied
 */
 type DeletePaymentMethodBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *DeletePaymentMethodBadRequest) Error() string {
@@ -90,12 +90,11 @@ func NewDeletePaymentMethodNotFound() *DeletePaymentMethodNotFound {
 	return &DeletePaymentMethodNotFound{}
 }
 
-/*DeletePaymentMethodNotFound handles this case with default header values.
+/* DeletePaymentMethodNotFound describes a response with status code 404, with default header values.
 
 Account or payment method not found
 */
 type DeletePaymentMethodNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *DeletePaymentMethodNotFound) Error() string {

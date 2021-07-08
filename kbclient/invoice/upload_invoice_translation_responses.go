@@ -10,9 +10,7 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // UploadInvoiceTranslationReader is a Reader for the UploadInvoiceTranslation structure.
@@ -23,20 +21,14 @@ type UploadInvoiceTranslationReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *UploadInvoiceTranslationReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewUploadInvoiceTranslationCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
 	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
-			return nil, err
-		}
-		return nil, errorResult
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -45,20 +37,17 @@ func NewUploadInvoiceTranslationCreated() *UploadInvoiceTranslationCreated {
 	return &UploadInvoiceTranslationCreated{}
 }
 
-/*UploadInvoiceTranslationCreated handles this case with default header values.
+/* UploadInvoiceTranslationCreated describes a response with status code 201, with default header values.
 
 Uploaded invoice translation Successfully
 */
 type UploadInvoiceTranslationCreated struct {
 	Payload string
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *UploadInvoiceTranslationCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/invoices/translation/{locale}][%d] uploadInvoiceTranslationCreated  %+v", 201, o.Payload)
 }
-
 func (o *UploadInvoiceTranslationCreated) GetPayload() string {
 	return o.Payload
 }

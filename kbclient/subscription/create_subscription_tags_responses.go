@@ -7,12 +7,9 @@ package subscription
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // CreateSubscriptionTagsReader is a Reader for the CreateSubscriptionTags structure.
@@ -23,21 +20,20 @@ type CreateSubscriptionTagsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateSubscriptionTagsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCreateSubscriptionTagsCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewCreateSubscriptionTagsBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,12 +42,11 @@ func NewCreateSubscriptionTagsCreated() *CreateSubscriptionTagsCreated {
 	return &CreateSubscriptionTagsCreated{}
 }
 
-/*CreateSubscriptionTagsCreated handles this case with default header values.
+/* CreateSubscriptionTagsCreated describes a response with status code 201, with default header values.
 
 Tag created successfully
 */
 type CreateSubscriptionTagsCreated struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateSubscriptionTagsCreated) Error() string {
@@ -68,12 +63,11 @@ func NewCreateSubscriptionTagsBadRequest() *CreateSubscriptionTagsBadRequest {
 	return &CreateSubscriptionTagsBadRequest{}
 }
 
-/*CreateSubscriptionTagsBadRequest handles this case with default header values.
+/* CreateSubscriptionTagsBadRequest describes a response with status code 400, with default header values.
 
 Invalid subscription id supplied
 */
 type CreateSubscriptionTagsBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateSubscriptionTagsBadRequest) Error() string {

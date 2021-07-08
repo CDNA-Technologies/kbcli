@@ -7,12 +7,9 @@ package bundle
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // ModifyBundleCustomFieldsReader is a Reader for the ModifyBundleCustomFields structure.
@@ -23,21 +20,20 @@ type ModifyBundleCustomFieldsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ModifyBundleCustomFieldsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewModifyBundleCustomFieldsNoContent()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewModifyBundleCustomFieldsBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,12 +42,11 @@ func NewModifyBundleCustomFieldsNoContent() *ModifyBundleCustomFieldsNoContent {
 	return &ModifyBundleCustomFieldsNoContent{}
 }
 
-/*ModifyBundleCustomFieldsNoContent handles this case with default header values.
+/* ModifyBundleCustomFieldsNoContent describes a response with status code 204, with default header values.
 
 Successful operation
 */
 type ModifyBundleCustomFieldsNoContent struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *ModifyBundleCustomFieldsNoContent) Error() string {
@@ -68,12 +63,11 @@ func NewModifyBundleCustomFieldsBadRequest() *ModifyBundleCustomFieldsBadRequest
 	return &ModifyBundleCustomFieldsBadRequest{}
 }
 
-/*ModifyBundleCustomFieldsBadRequest handles this case with default header values.
+/* ModifyBundleCustomFieldsBadRequest describes a response with status code 400, with default header values.
 
 Invalid bundle id supplied
 */
 type ModifyBundleCustomFieldsBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *ModifyBundleCustomFieldsBadRequest) Error() string {

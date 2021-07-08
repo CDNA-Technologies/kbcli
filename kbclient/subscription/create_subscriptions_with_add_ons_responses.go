@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CreateSubscriptionsWithAddOnsReader is a Reader for the CreateSubscriptionsWithAddOns structure.
@@ -25,20 +23,14 @@ type CreateSubscriptionsWithAddOnsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateSubscriptionsWithAddOnsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCreateSubscriptionsWithAddOnsCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
 	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
-			return nil, err
-		}
-		return nil, errorResult
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -47,20 +39,17 @@ func NewCreateSubscriptionsWithAddOnsCreated() *CreateSubscriptionsWithAddOnsCre
 	return &CreateSubscriptionsWithAddOnsCreated{}
 }
 
-/*CreateSubscriptionsWithAddOnsCreated handles this case with default header values.
+/* CreateSubscriptionsWithAddOnsCreated describes a response with status code 201, with default header values.
 
 Subscriptions created successfully
 */
 type CreateSubscriptionsWithAddOnsCreated struct {
 	Payload []*kbmodel.Bundle
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateSubscriptionsWithAddOnsCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/subscriptions/createSubscriptionsWithAddOns][%d] createSubscriptionsWithAddOnsCreated  %+v", 201, o.Payload)
 }
-
 func (o *CreateSubscriptionsWithAddOnsCreated) GetPayload() []*kbmodel.Bundle {
 	return o.Payload
 }

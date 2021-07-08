@@ -7,12 +7,9 @@ package subscription
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // ChangeSubscriptionPlanReader is a Reader for the ChangeSubscriptionPlan structure.
@@ -23,21 +20,26 @@ type ChangeSubscriptionPlanReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ChangeSubscriptionPlanReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewChangeSubscriptionPlanNoContent()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewChangeSubscriptionPlanBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewChangeSubscriptionPlanNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,12 +48,11 @@ func NewChangeSubscriptionPlanNoContent() *ChangeSubscriptionPlanNoContent {
 	return &ChangeSubscriptionPlanNoContent{}
 }
 
-/*ChangeSubscriptionPlanNoContent handles this case with default header values.
+/* ChangeSubscriptionPlanNoContent describes a response with status code 204, with default header values.
 
 Successful operation
 */
 type ChangeSubscriptionPlanNoContent struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChangeSubscriptionPlanNoContent) Error() string {
@@ -68,12 +69,11 @@ func NewChangeSubscriptionPlanBadRequest() *ChangeSubscriptionPlanBadRequest {
 	return &ChangeSubscriptionPlanBadRequest{}
 }
 
-/*ChangeSubscriptionPlanBadRequest handles this case with default header values.
+/* ChangeSubscriptionPlanBadRequest describes a response with status code 400, with default header values.
 
 Invalid subscription id supplied
 */
 type ChangeSubscriptionPlanBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChangeSubscriptionPlanBadRequest) Error() string {
@@ -90,12 +90,11 @@ func NewChangeSubscriptionPlanNotFound() *ChangeSubscriptionPlanNotFound {
 	return &ChangeSubscriptionPlanNotFound{}
 }
 
-/*ChangeSubscriptionPlanNotFound handles this case with default header values.
+/* ChangeSubscriptionPlanNotFound describes a response with status code 404, with default header values.
 
 Entitlement not found
 */
 type ChangeSubscriptionPlanNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChangeSubscriptionPlanNotFound) Error() string {

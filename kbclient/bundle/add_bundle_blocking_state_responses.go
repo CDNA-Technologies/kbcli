@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // AddBundleBlockingStateReader is a Reader for the AddBundleBlockingState structure.
@@ -25,21 +23,26 @@ type AddBundleBlockingStateReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *AddBundleBlockingStateReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewAddBundleBlockingStateCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewAddBundleBlockingStateBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewAddBundleBlockingStateNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +51,17 @@ func NewAddBundleBlockingStateCreated() *AddBundleBlockingStateCreated {
 	return &AddBundleBlockingStateCreated{}
 }
 
-/*AddBundleBlockingStateCreated handles this case with default header values.
+/* AddBundleBlockingStateCreated describes a response with status code 201, with default header values.
 
 Blocking state created successfully
 */
 type AddBundleBlockingStateCreated struct {
 	Payload []*kbmodel.BlockingState
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddBundleBlockingStateCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/bundles/{bundleId}/block][%d] addBundleBlockingStateCreated  %+v", 201, o.Payload)
 }
-
 func (o *AddBundleBlockingStateCreated) GetPayload() []*kbmodel.BlockingState {
 	return o.Payload
 }
@@ -81,12 +81,11 @@ func NewAddBundleBlockingStateBadRequest() *AddBundleBlockingStateBadRequest {
 	return &AddBundleBlockingStateBadRequest{}
 }
 
-/*AddBundleBlockingStateBadRequest handles this case with default header values.
+/* AddBundleBlockingStateBadRequest describes a response with status code 400, with default header values.
 
 Invalid bundle id supplied
 */
 type AddBundleBlockingStateBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddBundleBlockingStateBadRequest) Error() string {
@@ -103,12 +102,11 @@ func NewAddBundleBlockingStateNotFound() *AddBundleBlockingStateNotFound {
 	return &AddBundleBlockingStateNotFound{}
 }
 
-/*AddBundleBlockingStateNotFound handles this case with default header values.
+/* AddBundleBlockingStateNotFound describes a response with status code 404, with default header values.
 
 Bundle not found
 */
 type AddBundleBlockingStateNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddBundleBlockingStateNotFound) Error() string {

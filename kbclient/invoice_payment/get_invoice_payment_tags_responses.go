@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // GetInvoicePaymentTagsReader is a Reader for the GetInvoicePaymentTags structure.
@@ -25,21 +23,26 @@ type GetInvoicePaymentTagsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetInvoicePaymentTagsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetInvoicePaymentTagsOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewGetInvoicePaymentTagsBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewGetInvoicePaymentTagsNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +51,17 @@ func NewGetInvoicePaymentTagsOK() *GetInvoicePaymentTagsOK {
 	return &GetInvoicePaymentTagsOK{}
 }
 
-/*GetInvoicePaymentTagsOK handles this case with default header values.
+/* GetInvoicePaymentTagsOK describes a response with status code 200, with default header values.
 
 successful operation
 */
 type GetInvoicePaymentTagsOK struct {
 	Payload []*kbmodel.Tag
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoicePaymentTagsOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/invoicePayments/{paymentId}/tags][%d] getInvoicePaymentTagsOK  %+v", 200, o.Payload)
 }
-
 func (o *GetInvoicePaymentTagsOK) GetPayload() []*kbmodel.Tag {
 	return o.Payload
 }
@@ -81,12 +81,11 @@ func NewGetInvoicePaymentTagsBadRequest() *GetInvoicePaymentTagsBadRequest {
 	return &GetInvoicePaymentTagsBadRequest{}
 }
 
-/*GetInvoicePaymentTagsBadRequest handles this case with default header values.
+/* GetInvoicePaymentTagsBadRequest describes a response with status code 400, with default header values.
 
 Invalid payment id supplied
 */
 type GetInvoicePaymentTagsBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoicePaymentTagsBadRequest) Error() string {
@@ -103,12 +102,11 @@ func NewGetInvoicePaymentTagsNotFound() *GetInvoicePaymentTagsNotFound {
 	return &GetInvoicePaymentTagsNotFound{}
 }
 
-/*GetInvoicePaymentTagsNotFound handles this case with default header values.
+/* GetInvoicePaymentTagsNotFound describes a response with status code 404, with default header values.
 
 Payment not found
 */
 type GetInvoicePaymentTagsNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoicePaymentTagsNotFound) Error() string {

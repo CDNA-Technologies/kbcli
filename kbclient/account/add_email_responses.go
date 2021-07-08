@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // AddEmailReader is a Reader for the AddEmail structure.
@@ -25,21 +23,26 @@ type AddEmailReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *AddEmailReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewAddEmailCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewAddEmailBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewAddEmailNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +51,17 @@ func NewAddEmailCreated() *AddEmailCreated {
 	return &AddEmailCreated{}
 }
 
-/*AddEmailCreated handles this case with default header values.
+/* AddEmailCreated describes a response with status code 201, with default header values.
 
 Email created successfully
 */
 type AddEmailCreated struct {
 	Payload []*kbmodel.AccountEmail
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddEmailCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/accounts/{accountId}/emails][%d] addEmailCreated  %+v", 201, o.Payload)
 }
-
 func (o *AddEmailCreated) GetPayload() []*kbmodel.AccountEmail {
 	return o.Payload
 }
@@ -81,12 +81,11 @@ func NewAddEmailBadRequest() *AddEmailBadRequest {
 	return &AddEmailBadRequest{}
 }
 
-/*AddEmailBadRequest handles this case with default header values.
+/* AddEmailBadRequest describes a response with status code 400, with default header values.
 
 Invalid account id supplied
 */
 type AddEmailBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddEmailBadRequest) Error() string {
@@ -103,12 +102,11 @@ func NewAddEmailNotFound() *AddEmailNotFound {
 	return &AddEmailNotFound{}
 }
 
-/*AddEmailNotFound handles this case with default header values.
+/* AddEmailNotFound describes a response with status code 404, with default header values.
 
 Account not found
 */
 type AddEmailNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddEmailNotFound) Error() string {

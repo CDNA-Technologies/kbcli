@@ -10,9 +10,7 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // GetInvoiceTranslationReader is a Reader for the GetInvoiceTranslation structure.
@@ -23,21 +21,26 @@ type GetInvoiceTranslationReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetInvoiceTranslationReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetInvoiceTranslationOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewGetInvoiceTranslationBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewGetInvoiceTranslationNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,20 +49,17 @@ func NewGetInvoiceTranslationOK() *GetInvoiceTranslationOK {
 	return &GetInvoiceTranslationOK{}
 }
 
-/*GetInvoiceTranslationOK handles this case with default header values.
+/* GetInvoiceTranslationOK describes a response with status code 200, with default header values.
 
 successful operation
 */
 type GetInvoiceTranslationOK struct {
 	Payload string
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoiceTranslationOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/invoices/translation/{locale}][%d] getInvoiceTranslationOK  %+v", 200, o.Payload)
 }
-
 func (o *GetInvoiceTranslationOK) GetPayload() string {
 	return o.Payload
 }
@@ -79,12 +79,11 @@ func NewGetInvoiceTranslationBadRequest() *GetInvoiceTranslationBadRequest {
 	return &GetInvoiceTranslationBadRequest{}
 }
 
-/*GetInvoiceTranslationBadRequest handles this case with default header values.
+/* GetInvoiceTranslationBadRequest describes a response with status code 400, with default header values.
 
 Invalid locale supplied
 */
 type GetInvoiceTranslationBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoiceTranslationBadRequest) Error() string {
@@ -101,12 +100,11 @@ func NewGetInvoiceTranslationNotFound() *GetInvoiceTranslationNotFound {
 	return &GetInvoiceTranslationNotFound{}
 }
 
-/*GetInvoiceTranslationNotFound handles this case with default header values.
+/* GetInvoiceTranslationNotFound describes a response with status code 404, with default header values.
 
 Translation not found
 */
 type GetInvoiceTranslationNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoiceTranslationNotFound) Error() string {

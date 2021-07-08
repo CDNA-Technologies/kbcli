@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // GetTransactionTagsReader is a Reader for the GetTransactionTags structure.
@@ -25,21 +23,26 @@ type GetTransactionTagsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetTransactionTagsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetTransactionTagsOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewGetTransactionTagsBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewGetTransactionTagsNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +51,17 @@ func NewGetTransactionTagsOK() *GetTransactionTagsOK {
 	return &GetTransactionTagsOK{}
 }
 
-/*GetTransactionTagsOK handles this case with default header values.
+/* GetTransactionTagsOK describes a response with status code 200, with default header values.
 
 successful operation
 */
 type GetTransactionTagsOK struct {
 	Payload []*kbmodel.Tag
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetTransactionTagsOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/paymentTransactions/{transactionId}/tags][%d] getTransactionTagsOK  %+v", 200, o.Payload)
 }
-
 func (o *GetTransactionTagsOK) GetPayload() []*kbmodel.Tag {
 	return o.Payload
 }
@@ -81,12 +81,11 @@ func NewGetTransactionTagsBadRequest() *GetTransactionTagsBadRequest {
 	return &GetTransactionTagsBadRequest{}
 }
 
-/*GetTransactionTagsBadRequest handles this case with default header values.
+/* GetTransactionTagsBadRequest describes a response with status code 400, with default header values.
 
 Invalid transaction id supplied
 */
 type GetTransactionTagsBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetTransactionTagsBadRequest) Error() string {
@@ -103,12 +102,11 @@ func NewGetTransactionTagsNotFound() *GetTransactionTagsNotFound {
 	return &GetTransactionTagsNotFound{}
 }
 
-/*GetTransactionTagsNotFound handles this case with default header values.
+/* GetTransactionTagsNotFound describes a response with status code 404, with default header values.
 
 Invoice not found
 */
 type GetTransactionTagsNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetTransactionTagsNotFound) Error() string {

@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // GetPluginPaymentStateMachineConfigReader is a Reader for the GetPluginPaymentStateMachineConfig structure.
@@ -25,21 +23,20 @@ type GetPluginPaymentStateMachineConfigReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetPluginPaymentStateMachineConfigReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetPluginPaymentStateMachineConfigOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewGetPluginPaymentStateMachineConfigBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +45,17 @@ func NewGetPluginPaymentStateMachineConfigOK() *GetPluginPaymentStateMachineConf
 	return &GetPluginPaymentStateMachineConfigOK{}
 }
 
-/*GetPluginPaymentStateMachineConfigOK handles this case with default header values.
+/* GetPluginPaymentStateMachineConfigOK describes a response with status code 200, with default header values.
 
 successful operation
 */
 type GetPluginPaymentStateMachineConfigOK struct {
 	Payload *kbmodel.TenantKeyValue
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetPluginPaymentStateMachineConfigOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/tenants/uploadPluginPaymentStateMachineConfig/{pluginName}][%d] getPluginPaymentStateMachineConfigOK  %+v", 200, o.Payload)
 }
-
 func (o *GetPluginPaymentStateMachineConfigOK) GetPayload() *kbmodel.TenantKeyValue {
 	return o.Payload
 }
@@ -83,12 +77,11 @@ func NewGetPluginPaymentStateMachineConfigBadRequest() *GetPluginPaymentStateMac
 	return &GetPluginPaymentStateMachineConfigBadRequest{}
 }
 
-/*GetPluginPaymentStateMachineConfigBadRequest handles this case with default header values.
+/* GetPluginPaymentStateMachineConfigBadRequest describes a response with status code 400, with default header values.
 
 Invalid tenantId supplied
 */
 type GetPluginPaymentStateMachineConfigBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetPluginPaymentStateMachineConfigBadRequest) Error() string {

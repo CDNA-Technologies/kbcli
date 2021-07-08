@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // AddAccountBlockingStateReader is a Reader for the AddAccountBlockingState structure.
@@ -25,21 +23,26 @@ type AddAccountBlockingStateReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *AddAccountBlockingStateReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewAddAccountBlockingStateCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewAddAccountBlockingStateBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewAddAccountBlockingStateNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +51,17 @@ func NewAddAccountBlockingStateCreated() *AddAccountBlockingStateCreated {
 	return &AddAccountBlockingStateCreated{}
 }
 
-/*AddAccountBlockingStateCreated handles this case with default header values.
+/* AddAccountBlockingStateCreated describes a response with status code 201, with default header values.
 
 Blocking state created successfully
 */
 type AddAccountBlockingStateCreated struct {
 	Payload []*kbmodel.BlockingState
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddAccountBlockingStateCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/accounts/{accountId}/block][%d] addAccountBlockingStateCreated  %+v", 201, o.Payload)
 }
-
 func (o *AddAccountBlockingStateCreated) GetPayload() []*kbmodel.BlockingState {
 	return o.Payload
 }
@@ -81,12 +81,11 @@ func NewAddAccountBlockingStateBadRequest() *AddAccountBlockingStateBadRequest {
 	return &AddAccountBlockingStateBadRequest{}
 }
 
-/*AddAccountBlockingStateBadRequest handles this case with default header values.
+/* AddAccountBlockingStateBadRequest describes a response with status code 400, with default header values.
 
 Invalid account id supplied
 */
 type AddAccountBlockingStateBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddAccountBlockingStateBadRequest) Error() string {
@@ -103,12 +102,11 @@ func NewAddAccountBlockingStateNotFound() *AddAccountBlockingStateNotFound {
 	return &AddAccountBlockingStateNotFound{}
 }
 
-/*AddAccountBlockingStateNotFound handles this case with default header values.
+/* AddAccountBlockingStateNotFound describes a response with status code 404, with default header values.
 
 Account not found
 */
 type AddAccountBlockingStateNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddAccountBlockingStateNotFound) Error() string {

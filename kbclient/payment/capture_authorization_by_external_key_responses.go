@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CaptureAuthorizationByExternalKeyReader is a Reader for the CaptureAuthorizationByExternalKey structure.
@@ -25,21 +23,50 @@ type CaptureAuthorizationByExternalKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CaptureAuthorizationByExternalKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCaptureAuthorizationByExternalKeyCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 402:
+		result := NewCaptureAuthorizationByExternalKeyPaymentRequired()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewCaptureAuthorizationByExternalKeyNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 422:
+		result := NewCaptureAuthorizationByExternalKeyUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 502:
+		result := NewCaptureAuthorizationByExternalKeyBadGateway()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewCaptureAuthorizationByExternalKeyServiceUnavailable()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 504:
+		result := NewCaptureAuthorizationByExternalKeyGatewayTimeout()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +75,17 @@ func NewCaptureAuthorizationByExternalKeyCreated() *CaptureAuthorizationByExtern
 	return &CaptureAuthorizationByExternalKeyCreated{}
 }
 
-/*CaptureAuthorizationByExternalKeyCreated handles this case with default header values.
+/* CaptureAuthorizationByExternalKeyCreated describes a response with status code 201, with default header values.
 
 Payment transaction created successfully
 */
 type CaptureAuthorizationByExternalKeyCreated struct {
 	Payload *kbmodel.Payment
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationByExternalKeyCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/payments][%d] captureAuthorizationByExternalKeyCreated  %+v", 201, o.Payload)
 }
-
 func (o *CaptureAuthorizationByExternalKeyCreated) GetPayload() *kbmodel.Payment {
 	return o.Payload
 }
@@ -83,12 +107,11 @@ func NewCaptureAuthorizationByExternalKeyPaymentRequired() *CaptureAuthorization
 	return &CaptureAuthorizationByExternalKeyPaymentRequired{}
 }
 
-/*CaptureAuthorizationByExternalKeyPaymentRequired handles this case with default header values.
+/* CaptureAuthorizationByExternalKeyPaymentRequired describes a response with status code 402, with default header values.
 
 Transaction declined by gateway
 */
 type CaptureAuthorizationByExternalKeyPaymentRequired struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationByExternalKeyPaymentRequired) Error() string {
@@ -105,12 +128,11 @@ func NewCaptureAuthorizationByExternalKeyNotFound() *CaptureAuthorizationByExter
 	return &CaptureAuthorizationByExternalKeyNotFound{}
 }
 
-/*CaptureAuthorizationByExternalKeyNotFound handles this case with default header values.
+/* CaptureAuthorizationByExternalKeyNotFound describes a response with status code 404, with default header values.
 
 Account or payment not found
 */
 type CaptureAuthorizationByExternalKeyNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationByExternalKeyNotFound) Error() string {
@@ -127,12 +149,11 @@ func NewCaptureAuthorizationByExternalKeyUnprocessableEntity() *CaptureAuthoriza
 	return &CaptureAuthorizationByExternalKeyUnprocessableEntity{}
 }
 
-/*CaptureAuthorizationByExternalKeyUnprocessableEntity handles this case with default header values.
+/* CaptureAuthorizationByExternalKeyUnprocessableEntity describes a response with status code 422, with default header values.
 
 Payment is aborted by a control plugin
 */
 type CaptureAuthorizationByExternalKeyUnprocessableEntity struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationByExternalKeyUnprocessableEntity) Error() string {
@@ -149,12 +170,11 @@ func NewCaptureAuthorizationByExternalKeyBadGateway() *CaptureAuthorizationByExt
 	return &CaptureAuthorizationByExternalKeyBadGateway{}
 }
 
-/*CaptureAuthorizationByExternalKeyBadGateway handles this case with default header values.
+/* CaptureAuthorizationByExternalKeyBadGateway describes a response with status code 502, with default header values.
 
 Failed to submit payment transaction
 */
 type CaptureAuthorizationByExternalKeyBadGateway struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationByExternalKeyBadGateway) Error() string {
@@ -171,12 +191,11 @@ func NewCaptureAuthorizationByExternalKeyServiceUnavailable() *CaptureAuthorizat
 	return &CaptureAuthorizationByExternalKeyServiceUnavailable{}
 }
 
-/*CaptureAuthorizationByExternalKeyServiceUnavailable handles this case with default header values.
+/* CaptureAuthorizationByExternalKeyServiceUnavailable describes a response with status code 503, with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type CaptureAuthorizationByExternalKeyServiceUnavailable struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationByExternalKeyServiceUnavailable) Error() string {
@@ -193,12 +212,11 @@ func NewCaptureAuthorizationByExternalKeyGatewayTimeout() *CaptureAuthorizationB
 	return &CaptureAuthorizationByExternalKeyGatewayTimeout{}
 }
 
-/*CaptureAuthorizationByExternalKeyGatewayTimeout handles this case with default header values.
+/* CaptureAuthorizationByExternalKeyGatewayTimeout describes a response with status code 504, with default header values.
 
 Payment operation timeout
 */
 type CaptureAuthorizationByExternalKeyGatewayTimeout struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationByExternalKeyGatewayTimeout) Error() string {

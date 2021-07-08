@@ -7,12 +7,9 @@ package payment
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // DeletePaymentCustomFieldsReader is a Reader for the DeletePaymentCustomFields structure.
@@ -23,21 +20,20 @@ type DeletePaymentCustomFieldsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *DeletePaymentCustomFieldsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewDeletePaymentCustomFieldsNoContent()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewDeletePaymentCustomFieldsBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,12 +42,11 @@ func NewDeletePaymentCustomFieldsNoContent() *DeletePaymentCustomFieldsNoContent
 	return &DeletePaymentCustomFieldsNoContent{}
 }
 
-/*DeletePaymentCustomFieldsNoContent handles this case with default header values.
+/* DeletePaymentCustomFieldsNoContent describes a response with status code 204, with default header values.
 
 Successful operation
 */
 type DeletePaymentCustomFieldsNoContent struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *DeletePaymentCustomFieldsNoContent) Error() string {
@@ -68,12 +63,11 @@ func NewDeletePaymentCustomFieldsBadRequest() *DeletePaymentCustomFieldsBadReque
 	return &DeletePaymentCustomFieldsBadRequest{}
 }
 
-/*DeletePaymentCustomFieldsBadRequest handles this case with default header values.
+/* DeletePaymentCustomFieldsBadRequest describes a response with status code 400, with default header values.
 
 Invalid payment id supplied
 */
 type DeletePaymentCustomFieldsBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *DeletePaymentCustomFieldsBadRequest) Error() string {

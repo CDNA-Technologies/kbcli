@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CreateChargebackReversalReader is a Reader for the CreateChargebackReversal structure.
@@ -25,21 +23,26 @@ type CreateChargebackReversalReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateChargebackReversalReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCreateChargebackReversalCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewCreateChargebackReversalBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewCreateChargebackReversalNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +51,17 @@ func NewCreateChargebackReversalCreated() *CreateChargebackReversalCreated {
 	return &CreateChargebackReversalCreated{}
 }
 
-/*CreateChargebackReversalCreated handles this case with default header values.
+/* CreateChargebackReversalCreated describes a response with status code 201, with default header values.
 
 Created chargeback reversal successfully
 */
 type CreateChargebackReversalCreated struct {
 	Payload *kbmodel.InvoicePayment
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateChargebackReversalCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/invoicePayments/{paymentId}/chargebackReversals][%d] createChargebackReversalCreated  %+v", 201, o.Payload)
 }
-
 func (o *CreateChargebackReversalCreated) GetPayload() *kbmodel.InvoicePayment {
 	return o.Payload
 }
@@ -83,12 +83,11 @@ func NewCreateChargebackReversalBadRequest() *CreateChargebackReversalBadRequest
 	return &CreateChargebackReversalBadRequest{}
 }
 
-/*CreateChargebackReversalBadRequest handles this case with default header values.
+/* CreateChargebackReversalBadRequest describes a response with status code 400, with default header values.
 
 Invalid payment id supplied
 */
 type CreateChargebackReversalBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateChargebackReversalBadRequest) Error() string {
@@ -105,12 +104,11 @@ func NewCreateChargebackReversalNotFound() *CreateChargebackReversalNotFound {
 	return &CreateChargebackReversalNotFound{}
 }
 
-/*CreateChargebackReversalNotFound handles this case with default header values.
+/* CreateChargebackReversalNotFound describes a response with status code 404, with default header values.
 
 Account or payment not found
 */
 type CreateChargebackReversalNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateChargebackReversalNotFound) Error() string {

@@ -7,12 +7,9 @@ package bundle
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // RenameExternalKeyReader is a Reader for the RenameExternalKey structure.
@@ -23,21 +20,26 @@ type RenameExternalKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *RenameExternalKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewRenameExternalKeyNoContent()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewRenameExternalKeyBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewRenameExternalKeyNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,12 +48,11 @@ func NewRenameExternalKeyNoContent() *RenameExternalKeyNoContent {
 	return &RenameExternalKeyNoContent{}
 }
 
-/*RenameExternalKeyNoContent handles this case with default header values.
+/* RenameExternalKeyNoContent describes a response with status code 204, with default header values.
 
 Successful operation
 */
 type RenameExternalKeyNoContent struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *RenameExternalKeyNoContent) Error() string {
@@ -68,12 +69,11 @@ func NewRenameExternalKeyBadRequest() *RenameExternalKeyBadRequest {
 	return &RenameExternalKeyBadRequest{}
 }
 
-/*RenameExternalKeyBadRequest handles this case with default header values.
+/* RenameExternalKeyBadRequest describes a response with status code 400, with default header values.
 
 Invalid argumnent supplied
 */
 type RenameExternalKeyBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *RenameExternalKeyBadRequest) Error() string {
@@ -90,12 +90,11 @@ func NewRenameExternalKeyNotFound() *RenameExternalKeyNotFound {
 	return &RenameExternalKeyNotFound{}
 }
 
-/*RenameExternalKeyNotFound handles this case with default header values.
+/* RenameExternalKeyNotFound describes a response with status code 404, with default header values.
 
 Bundle not found
 */
 type RenameExternalKeyNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *RenameExternalKeyNotFound) Error() string {

@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CreateTaxItemsReader is a Reader for the CreateTaxItems structure.
@@ -25,21 +23,26 @@ type CreateTaxItemsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateTaxItemsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCreateTaxItemsCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewCreateTaxItemsBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewCreateTaxItemsNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +51,17 @@ func NewCreateTaxItemsCreated() *CreateTaxItemsCreated {
 	return &CreateTaxItemsCreated{}
 }
 
-/*CreateTaxItemsCreated handles this case with default header values.
+/* CreateTaxItemsCreated describes a response with status code 201, with default header values.
 
 Create tax items successfully
 */
 type CreateTaxItemsCreated struct {
 	Payload []*kbmodel.InvoiceItem
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateTaxItemsCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/invoices/taxes/{accountId}][%d] createTaxItemsCreated  %+v", 201, o.Payload)
 }
-
 func (o *CreateTaxItemsCreated) GetPayload() []*kbmodel.InvoiceItem {
 	return o.Payload
 }
@@ -81,12 +81,11 @@ func NewCreateTaxItemsBadRequest() *CreateTaxItemsBadRequest {
 	return &CreateTaxItemsBadRequest{}
 }
 
-/*CreateTaxItemsBadRequest handles this case with default header values.
+/* CreateTaxItemsBadRequest describes a response with status code 400, with default header values.
 
 Invalid account id supplied
 */
 type CreateTaxItemsBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateTaxItemsBadRequest) Error() string {
@@ -103,12 +102,11 @@ func NewCreateTaxItemsNotFound() *CreateTaxItemsNotFound {
 	return &CreateTaxItemsNotFound{}
 }
 
-/*CreateTaxItemsNotFound handles this case with default header values.
+/* CreateTaxItemsNotFound describes a response with status code 404, with default header values.
 
 Account not found
 */
 type CreateTaxItemsNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateTaxItemsNotFound) Error() string {

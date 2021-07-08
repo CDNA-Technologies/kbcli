@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CreateInvoiceItemCustomFieldsReader is a Reader for the CreateInvoiceItemCustomFields structure.
@@ -25,21 +23,20 @@ type CreateInvoiceItemCustomFieldsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateInvoiceItemCustomFieldsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCreateInvoiceItemCustomFieldsCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewCreateInvoiceItemCustomFieldsBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +45,17 @@ func NewCreateInvoiceItemCustomFieldsCreated() *CreateInvoiceItemCustomFieldsCre
 	return &CreateInvoiceItemCustomFieldsCreated{}
 }
 
-/*CreateInvoiceItemCustomFieldsCreated handles this case with default header values.
+/* CreateInvoiceItemCustomFieldsCreated describes a response with status code 201, with default header values.
 
 Custom field created successfully
 */
 type CreateInvoiceItemCustomFieldsCreated struct {
 	Payload []*kbmodel.CustomField
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateInvoiceItemCustomFieldsCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/invoiceItems/{invoiceItemId}/customFields][%d] createInvoiceItemCustomFieldsCreated  %+v", 201, o.Payload)
 }
-
 func (o *CreateInvoiceItemCustomFieldsCreated) GetPayload() []*kbmodel.CustomField {
 	return o.Payload
 }
@@ -81,12 +75,11 @@ func NewCreateInvoiceItemCustomFieldsBadRequest() *CreateInvoiceItemCustomFields
 	return &CreateInvoiceItemCustomFieldsBadRequest{}
 }
 
-/*CreateInvoiceItemCustomFieldsBadRequest handles this case with default header values.
+/* CreateInvoiceItemCustomFieldsBadRequest describes a response with status code 400, with default header values.
 
 Invalid invoice item id supplied
 */
 type CreateInvoiceItemCustomFieldsBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateInvoiceItemCustomFieldsBadRequest) Error() string {

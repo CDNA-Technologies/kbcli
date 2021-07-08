@@ -7,12 +7,9 @@ package invoice_payment
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // CompleteInvoicePaymentTransactionReader is a Reader for the CompleteInvoicePaymentTransaction structure.
@@ -23,21 +20,56 @@ type CompleteInvoicePaymentTransactionReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CompleteInvoicePaymentTransactionReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewCompleteInvoicePaymentTransactionNoContent()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewCompleteInvoicePaymentTransactionBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 402:
+		result := NewCompleteInvoicePaymentTransactionPaymentRequired()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 404:
+		result := NewCompleteInvoicePaymentTransactionNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 422:
+		result := NewCompleteInvoicePaymentTransactionUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 502:
+		result := NewCompleteInvoicePaymentTransactionBadGateway()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewCompleteInvoicePaymentTransactionServiceUnavailable()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 504:
+		result := NewCompleteInvoicePaymentTransactionGatewayTimeout()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,12 +78,11 @@ func NewCompleteInvoicePaymentTransactionNoContent() *CompleteInvoicePaymentTran
 	return &CompleteInvoicePaymentTransactionNoContent{}
 }
 
-/*CompleteInvoicePaymentTransactionNoContent handles this case with default header values.
+/* CompleteInvoicePaymentTransactionNoContent describes a response with status code 204, with default header values.
 
 Successful operation
 */
 type CompleteInvoicePaymentTransactionNoContent struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteInvoicePaymentTransactionNoContent) Error() string {
@@ -68,12 +99,11 @@ func NewCompleteInvoicePaymentTransactionBadRequest() *CompleteInvoicePaymentTra
 	return &CompleteInvoicePaymentTransactionBadRequest{}
 }
 
-/*CompleteInvoicePaymentTransactionBadRequest handles this case with default header values.
+/* CompleteInvoicePaymentTransactionBadRequest describes a response with status code 400, with default header values.
 
 Invalid paymentId supplied
 */
 type CompleteInvoicePaymentTransactionBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteInvoicePaymentTransactionBadRequest) Error() string {
@@ -90,12 +120,11 @@ func NewCompleteInvoicePaymentTransactionPaymentRequired() *CompleteInvoicePayme
 	return &CompleteInvoicePaymentTransactionPaymentRequired{}
 }
 
-/*CompleteInvoicePaymentTransactionPaymentRequired handles this case with default header values.
+/* CompleteInvoicePaymentTransactionPaymentRequired describes a response with status code 402, with default header values.
 
 Transaction declined by gateway
 */
 type CompleteInvoicePaymentTransactionPaymentRequired struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteInvoicePaymentTransactionPaymentRequired) Error() string {
@@ -112,12 +141,11 @@ func NewCompleteInvoicePaymentTransactionNotFound() *CompleteInvoicePaymentTrans
 	return &CompleteInvoicePaymentTransactionNotFound{}
 }
 
-/*CompleteInvoicePaymentTransactionNotFound handles this case with default header values.
+/* CompleteInvoicePaymentTransactionNotFound describes a response with status code 404, with default header values.
 
 Account or payment not found
 */
 type CompleteInvoicePaymentTransactionNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteInvoicePaymentTransactionNotFound) Error() string {
@@ -134,12 +162,11 @@ func NewCompleteInvoicePaymentTransactionUnprocessableEntity() *CompleteInvoiceP
 	return &CompleteInvoicePaymentTransactionUnprocessableEntity{}
 }
 
-/*CompleteInvoicePaymentTransactionUnprocessableEntity handles this case with default header values.
+/* CompleteInvoicePaymentTransactionUnprocessableEntity describes a response with status code 422, with default header values.
 
 Payment is aborted by a control plugin
 */
 type CompleteInvoicePaymentTransactionUnprocessableEntity struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteInvoicePaymentTransactionUnprocessableEntity) Error() string {
@@ -156,12 +183,11 @@ func NewCompleteInvoicePaymentTransactionBadGateway() *CompleteInvoicePaymentTra
 	return &CompleteInvoicePaymentTransactionBadGateway{}
 }
 
-/*CompleteInvoicePaymentTransactionBadGateway handles this case with default header values.
+/* CompleteInvoicePaymentTransactionBadGateway describes a response with status code 502, with default header values.
 
 Failed to submit payment transaction
 */
 type CompleteInvoicePaymentTransactionBadGateway struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteInvoicePaymentTransactionBadGateway) Error() string {
@@ -178,12 +204,11 @@ func NewCompleteInvoicePaymentTransactionServiceUnavailable() *CompleteInvoicePa
 	return &CompleteInvoicePaymentTransactionServiceUnavailable{}
 }
 
-/*CompleteInvoicePaymentTransactionServiceUnavailable handles this case with default header values.
+/* CompleteInvoicePaymentTransactionServiceUnavailable describes a response with status code 503, with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type CompleteInvoicePaymentTransactionServiceUnavailable struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteInvoicePaymentTransactionServiceUnavailable) Error() string {
@@ -200,12 +225,11 @@ func NewCompleteInvoicePaymentTransactionGatewayTimeout() *CompleteInvoicePaymen
 	return &CompleteInvoicePaymentTransactionGatewayTimeout{}
 }
 
-/*CompleteInvoicePaymentTransactionGatewayTimeout handles this case with default header values.
+/* CompleteInvoicePaymentTransactionGatewayTimeout describes a response with status code 504, with default header values.
 
 Payment operation timeout
 */
 type CompleteInvoicePaymentTransactionGatewayTimeout struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteInvoicePaymentTransactionGatewayTimeout) Error() string {

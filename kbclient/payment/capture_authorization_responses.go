@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CaptureAuthorizationReader is a Reader for the CaptureAuthorization structure.
@@ -25,21 +23,56 @@ type CaptureAuthorizationReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CaptureAuthorizationReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCaptureAuthorizationCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewCaptureAuthorizationBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 402:
+		result := NewCaptureAuthorizationPaymentRequired()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 404:
+		result := NewCaptureAuthorizationNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 422:
+		result := NewCaptureAuthorizationUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 502:
+		result := NewCaptureAuthorizationBadGateway()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewCaptureAuthorizationServiceUnavailable()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 504:
+		result := NewCaptureAuthorizationGatewayTimeout()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +81,17 @@ func NewCaptureAuthorizationCreated() *CaptureAuthorizationCreated {
 	return &CaptureAuthorizationCreated{}
 }
 
-/*CaptureAuthorizationCreated handles this case with default header values.
+/* CaptureAuthorizationCreated describes a response with status code 201, with default header values.
 
 Payment transaction created successfully
 */
 type CaptureAuthorizationCreated struct {
 	Payload *kbmodel.Payment
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/payments/{paymentId}][%d] captureAuthorizationCreated  %+v", 201, o.Payload)
 }
-
 func (o *CaptureAuthorizationCreated) GetPayload() *kbmodel.Payment {
 	return o.Payload
 }
@@ -83,12 +113,11 @@ func NewCaptureAuthorizationBadRequest() *CaptureAuthorizationBadRequest {
 	return &CaptureAuthorizationBadRequest{}
 }
 
-/*CaptureAuthorizationBadRequest handles this case with default header values.
+/* CaptureAuthorizationBadRequest describes a response with status code 400, with default header values.
 
 Invalid paymentId supplied
 */
 type CaptureAuthorizationBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationBadRequest) Error() string {
@@ -105,12 +134,11 @@ func NewCaptureAuthorizationPaymentRequired() *CaptureAuthorizationPaymentRequir
 	return &CaptureAuthorizationPaymentRequired{}
 }
 
-/*CaptureAuthorizationPaymentRequired handles this case with default header values.
+/* CaptureAuthorizationPaymentRequired describes a response with status code 402, with default header values.
 
 Transaction declined by gateway
 */
 type CaptureAuthorizationPaymentRequired struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationPaymentRequired) Error() string {
@@ -127,12 +155,11 @@ func NewCaptureAuthorizationNotFound() *CaptureAuthorizationNotFound {
 	return &CaptureAuthorizationNotFound{}
 }
 
-/*CaptureAuthorizationNotFound handles this case with default header values.
+/* CaptureAuthorizationNotFound describes a response with status code 404, with default header values.
 
 Account or payment not found
 */
 type CaptureAuthorizationNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationNotFound) Error() string {
@@ -149,12 +176,11 @@ func NewCaptureAuthorizationUnprocessableEntity() *CaptureAuthorizationUnprocess
 	return &CaptureAuthorizationUnprocessableEntity{}
 }
 
-/*CaptureAuthorizationUnprocessableEntity handles this case with default header values.
+/* CaptureAuthorizationUnprocessableEntity describes a response with status code 422, with default header values.
 
 Payment is aborted by a control plugin
 */
 type CaptureAuthorizationUnprocessableEntity struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationUnprocessableEntity) Error() string {
@@ -171,12 +197,11 @@ func NewCaptureAuthorizationBadGateway() *CaptureAuthorizationBadGateway {
 	return &CaptureAuthorizationBadGateway{}
 }
 
-/*CaptureAuthorizationBadGateway handles this case with default header values.
+/* CaptureAuthorizationBadGateway describes a response with status code 502, with default header values.
 
 Failed to submit payment transaction
 */
 type CaptureAuthorizationBadGateway struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationBadGateway) Error() string {
@@ -193,12 +218,11 @@ func NewCaptureAuthorizationServiceUnavailable() *CaptureAuthorizationServiceUna
 	return &CaptureAuthorizationServiceUnavailable{}
 }
 
-/*CaptureAuthorizationServiceUnavailable handles this case with default header values.
+/* CaptureAuthorizationServiceUnavailable describes a response with status code 503, with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type CaptureAuthorizationServiceUnavailable struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationServiceUnavailable) Error() string {
@@ -215,12 +239,11 @@ func NewCaptureAuthorizationGatewayTimeout() *CaptureAuthorizationGatewayTimeout
 	return &CaptureAuthorizationGatewayTimeout{}
 }
 
-/*CaptureAuthorizationGatewayTimeout handles this case with default header values.
+/* CaptureAuthorizationGatewayTimeout describes a response with status code 504, with default header values.
 
 Payment operation timeout
 */
 type CaptureAuthorizationGatewayTimeout struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CaptureAuthorizationGatewayTimeout) Error() string {

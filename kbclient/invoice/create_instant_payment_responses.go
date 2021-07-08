@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CreateInstantPaymentReader is a Reader for the CreateInstantPayment structure.
@@ -25,29 +23,32 @@ type CreateInstantPaymentReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateInstantPaymentReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCreateInstantPaymentCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	case 204:
 		result := NewCreateInstantPaymentNoContent()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewCreateInstantPaymentBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	case 404:
+		result := NewCreateInstantPaymentNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -56,20 +57,17 @@ func NewCreateInstantPaymentCreated() *CreateInstantPaymentCreated {
 	return &CreateInstantPaymentCreated{}
 }
 
-/*CreateInstantPaymentCreated handles this case with default header values.
+/* CreateInstantPaymentCreated describes a response with status code 201, with default header values.
 
 Created payment Successfully
 */
 type CreateInstantPaymentCreated struct {
 	Payload *kbmodel.InvoicePayment
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateInstantPaymentCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/invoices/{invoiceId}/payments][%d] createInstantPaymentCreated  %+v", 201, o.Payload)
 }
-
 func (o *CreateInstantPaymentCreated) GetPayload() *kbmodel.InvoicePayment {
 	return o.Payload
 }
@@ -91,12 +89,11 @@ func NewCreateInstantPaymentNoContent() *CreateInstantPaymentNoContent {
 	return &CreateInstantPaymentNoContent{}
 }
 
-/*CreateInstantPaymentNoContent handles this case with default header values.
+/* CreateInstantPaymentNoContent describes a response with status code 204, with default header values.
 
 Nothing to pay for
 */
 type CreateInstantPaymentNoContent struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateInstantPaymentNoContent) Error() string {
@@ -113,12 +110,11 @@ func NewCreateInstantPaymentBadRequest() *CreateInstantPaymentBadRequest {
 	return &CreateInstantPaymentBadRequest{}
 }
 
-/*CreateInstantPaymentBadRequest handles this case with default header values.
+/* CreateInstantPaymentBadRequest describes a response with status code 400, with default header values.
 
 Invalid account id or invoice id supplied
 */
 type CreateInstantPaymentBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateInstantPaymentBadRequest) Error() string {
@@ -135,12 +131,11 @@ func NewCreateInstantPaymentNotFound() *CreateInstantPaymentNotFound {
 	return &CreateInstantPaymentNotFound{}
 }
 
-/*CreateInstantPaymentNotFound handles this case with default header values.
+/* CreateInstantPaymentNotFound describes a response with status code 404, with default header values.
 
 Account not found
 */
 type CreateInstantPaymentNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateInstantPaymentNotFound) Error() string {

@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // GetPaymentByTransactionExternalKeyReader is a Reader for the GetPaymentByTransactionExternalKey structure.
@@ -25,21 +23,20 @@ type GetPaymentByTransactionExternalKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetPaymentByTransactionExternalKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetPaymentByTransactionExternalKeyOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 404:
+		result := NewGetPaymentByTransactionExternalKeyNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +45,17 @@ func NewGetPaymentByTransactionExternalKeyOK() *GetPaymentByTransactionExternalK
 	return &GetPaymentByTransactionExternalKeyOK{}
 }
 
-/*GetPaymentByTransactionExternalKeyOK handles this case with default header values.
+/* GetPaymentByTransactionExternalKeyOK describes a response with status code 200, with default header values.
 
 successful operation
 */
 type GetPaymentByTransactionExternalKeyOK struct {
 	Payload *kbmodel.Payment
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetPaymentByTransactionExternalKeyOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/paymentTransactions][%d] getPaymentByTransactionExternalKeyOK  %+v", 200, o.Payload)
 }
-
 func (o *GetPaymentByTransactionExternalKeyOK) GetPayload() *kbmodel.Payment {
 	return o.Payload
 }
@@ -83,12 +77,11 @@ func NewGetPaymentByTransactionExternalKeyNotFound() *GetPaymentByTransactionExt
 	return &GetPaymentByTransactionExternalKeyNotFound{}
 }
 
-/*GetPaymentByTransactionExternalKeyNotFound handles this case with default header values.
+/* GetPaymentByTransactionExternalKeyNotFound describes a response with status code 404, with default header values.
 
 Payment not found
 */
 type GetPaymentByTransactionExternalKeyNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetPaymentByTransactionExternalKeyNotFound) Error() string {

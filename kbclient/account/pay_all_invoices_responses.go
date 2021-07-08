@@ -10,9 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // PayAllInvoicesReader is a Reader for the PayAllInvoices structure.
@@ -23,22 +23,57 @@ type PayAllInvoicesReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *PayAllInvoicesReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 204:
-		result := NewPayAllInvoicesNoContent()
-		result.HttpResponse = response
+	case 201:
+		result := NewPayAllInvoicesCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 204:
+		result := NewPayAllInvoicesNoContent()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return result, nil
+	case 404:
+		result := NewPayAllInvoicesNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
+}
+
+// NewPayAllInvoicesCreated creates a PayAllInvoicesCreated with default headers values
+func NewPayAllInvoicesCreated() *PayAllInvoicesCreated {
+	return &PayAllInvoicesCreated{}
+}
+
+/* PayAllInvoicesCreated describes a response with status code 201, with default header values.
+
+Successful operation
+*/
+type PayAllInvoicesCreated struct {
+	Payload []*kbmodel.Invoice
+}
+
+func (o *PayAllInvoicesCreated) Error() string {
+	return fmt.Sprintf("[POST /1.0/kb/accounts/{accountId}/invoicePayments][%d] payAllInvoicesCreated  %+v", 201, o.Payload)
+}
+func (o *PayAllInvoicesCreated) GetPayload() []*kbmodel.Invoice {
+	return o.Payload
+}
+
+func (o *PayAllInvoicesCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
 }
 
 // NewPayAllInvoicesNoContent creates a PayAllInvoicesNoContent with default headers values
@@ -46,12 +81,11 @@ func NewPayAllInvoicesNoContent() *PayAllInvoicesNoContent {
 	return &PayAllInvoicesNoContent{}
 }
 
-/*PayAllInvoicesNoContent handles this case with default header values.
+/* PayAllInvoicesNoContent describes a response with status code 204, with default header values.
 
-Successful operation
+Nothing to pay
 */
 type PayAllInvoicesNoContent struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *PayAllInvoicesNoContent) Error() string {
@@ -68,12 +102,11 @@ func NewPayAllInvoicesNotFound() *PayAllInvoicesNotFound {
 	return &PayAllInvoicesNotFound{}
 }
 
-/*PayAllInvoicesNotFound handles this case with default header values.
+/* PayAllInvoicesNotFound describes a response with status code 404, with default header values.
 
 Invalid account id supplied
 */
 type PayAllInvoicesNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *PayAllInvoicesNotFound) Error() string {

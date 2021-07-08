@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // GetPaymentAttemptAuditLogsWithHistoryReader is a Reader for the GetPaymentAttemptAuditLogsWithHistory structure.
@@ -25,21 +23,20 @@ type GetPaymentAttemptAuditLogsWithHistoryReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetPaymentAttemptAuditLogsWithHistoryReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetPaymentAttemptAuditLogsWithHistoryOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 404:
+		result := NewGetPaymentAttemptAuditLogsWithHistoryNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +45,17 @@ func NewGetPaymentAttemptAuditLogsWithHistoryOK() *GetPaymentAttemptAuditLogsWit
 	return &GetPaymentAttemptAuditLogsWithHistoryOK{}
 }
 
-/*GetPaymentAttemptAuditLogsWithHistoryOK handles this case with default header values.
+/* GetPaymentAttemptAuditLogsWithHistoryOK describes a response with status code 200, with default header values.
 
 successful operation
 */
 type GetPaymentAttemptAuditLogsWithHistoryOK struct {
 	Payload []*kbmodel.AuditLog
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetPaymentAttemptAuditLogsWithHistoryOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/payments/attempts/{paymentAttemptId}/auditLogsWithHistory][%d] getPaymentAttemptAuditLogsWithHistoryOK  %+v", 200, o.Payload)
 }
-
 func (o *GetPaymentAttemptAuditLogsWithHistoryOK) GetPayload() []*kbmodel.AuditLog {
 	return o.Payload
 }
@@ -81,12 +75,11 @@ func NewGetPaymentAttemptAuditLogsWithHistoryNotFound() *GetPaymentAttemptAuditL
 	return &GetPaymentAttemptAuditLogsWithHistoryNotFound{}
 }
 
-/*GetPaymentAttemptAuditLogsWithHistoryNotFound handles this case with default header values.
+/* GetPaymentAttemptAuditLogsWithHistoryNotFound describes a response with status code 404, with default header values.
 
 Account not found
 */
 type GetPaymentAttemptAuditLogsWithHistoryNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetPaymentAttemptAuditLogsWithHistoryNotFound) Error() string {

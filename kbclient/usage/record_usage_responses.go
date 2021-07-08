@@ -7,12 +7,9 @@ package usage
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // RecordUsageReader is a Reader for the RecordUsage structure.
@@ -23,21 +20,20 @@ type RecordUsageReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *RecordUsageReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewRecordUsageOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewRecordUsageBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -46,12 +42,11 @@ func NewRecordUsageOK() *RecordUsageOK {
 	return &RecordUsageOK{}
 }
 
-/*RecordUsageOK handles this case with default header values.
+/* RecordUsageOK describes a response with status code 200, with default header values.
 
 Successfully recorded usage data change
 */
 type RecordUsageOK struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *RecordUsageOK) Error() string {
@@ -68,12 +63,11 @@ func NewRecordUsageBadRequest() *RecordUsageBadRequest {
 	return &RecordUsageBadRequest{}
 }
 
-/*RecordUsageBadRequest handles this case with default header values.
+/* RecordUsageBadRequest describes a response with status code 400, with default header values.
 
 Invalid subscription (e.g. inactive)
 */
 type RecordUsageBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *RecordUsageBadRequest) Error() string {

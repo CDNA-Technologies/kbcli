@@ -6,15 +6,16 @@ package kbmodel
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // ComboPaymentTransaction combo payment transaction
+//
 // swagger:model ComboPaymentTransaction
 type ComboPaymentTransaction struct {
 
@@ -72,7 +73,6 @@ func (m *ComboPaymentTransaction) Validate(formats strfmt.Registry) error {
 }
 
 func (m *ComboPaymentTransaction) validateAccount(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Account) { // not required
 		return nil
 	}
@@ -90,7 +90,6 @@ func (m *ComboPaymentTransaction) validateAccount(formats strfmt.Registry) error
 }
 
 func (m *ComboPaymentTransaction) validateAuditLogs(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.AuditLogs) { // not required
 		return nil
 	}
@@ -115,7 +114,6 @@ func (m *ComboPaymentTransaction) validateAuditLogs(formats strfmt.Registry) err
 }
 
 func (m *ComboPaymentTransaction) validatePaymentMethod(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.PaymentMethod) { // not required
 		return nil
 	}
@@ -133,7 +131,6 @@ func (m *ComboPaymentTransaction) validatePaymentMethod(formats strfmt.Registry)
 }
 
 func (m *ComboPaymentTransaction) validatePaymentMethodPluginProperties(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.PaymentMethodPluginProperties) { // not required
 		return nil
 	}
@@ -158,7 +155,6 @@ func (m *ComboPaymentTransaction) validatePaymentMethodPluginProperties(formats 
 }
 
 func (m *ComboPaymentTransaction) validateTransaction(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Transaction) { // not required
 		return nil
 	}
@@ -176,7 +172,6 @@ func (m *ComboPaymentTransaction) validateTransaction(formats strfmt.Registry) e
 }
 
 func (m *ComboPaymentTransaction) validateTransactionPluginProperties(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.TransactionPluginProperties) { // not required
 		return nil
 	}
@@ -188,6 +183,136 @@ func (m *ComboPaymentTransaction) validateTransactionPluginProperties(formats st
 
 		if m.TransactionPluginProperties[i] != nil {
 			if err := m.TransactionPluginProperties[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("transactionPluginProperties" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this combo payment transaction based on the context it is used
+func (m *ComboPaymentTransaction) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateAccount(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateAuditLogs(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePaymentMethod(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePaymentMethodPluginProperties(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTransaction(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTransactionPluginProperties(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ComboPaymentTransaction) contextValidateAccount(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Account != nil {
+		if err := m.Account.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("account")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *ComboPaymentTransaction) contextValidateAuditLogs(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.AuditLogs); i++ {
+
+		if m.AuditLogs[i] != nil {
+			if err := m.AuditLogs[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("auditLogs" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *ComboPaymentTransaction) contextValidatePaymentMethod(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.PaymentMethod != nil {
+		if err := m.PaymentMethod.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("paymentMethod")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *ComboPaymentTransaction) contextValidatePaymentMethodPluginProperties(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.PaymentMethodPluginProperties); i++ {
+
+		if m.PaymentMethodPluginProperties[i] != nil {
+			if err := m.PaymentMethodPluginProperties[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("paymentMethodPluginProperties" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *ComboPaymentTransaction) contextValidateTransaction(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Transaction != nil {
+		if err := m.Transaction.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("transaction")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *ComboPaymentTransaction) contextValidateTransactionPluginProperties(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.TransactionPluginProperties); i++ {
+
+		if m.TransactionPluginProperties[i] != nil {
+			if err := m.TransactionPluginProperties[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("transactionPluginProperties" + "." + strconv.Itoa(i))
 				}

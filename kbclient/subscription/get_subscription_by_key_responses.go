@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // GetSubscriptionByKeyReader is a Reader for the GetSubscriptionByKey structure.
@@ -25,21 +23,20 @@ type GetSubscriptionByKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetSubscriptionByKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetSubscriptionByKeyOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 404:
+		result := NewGetSubscriptionByKeyNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +45,17 @@ func NewGetSubscriptionByKeyOK() *GetSubscriptionByKeyOK {
 	return &GetSubscriptionByKeyOK{}
 }
 
-/*GetSubscriptionByKeyOK handles this case with default header values.
+/* GetSubscriptionByKeyOK describes a response with status code 200, with default header values.
 
 successful operation
 */
 type GetSubscriptionByKeyOK struct {
 	Payload *kbmodel.Subscription
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetSubscriptionByKeyOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/subscriptions][%d] getSubscriptionByKeyOK  %+v", 200, o.Payload)
 }
-
 func (o *GetSubscriptionByKeyOK) GetPayload() *kbmodel.Subscription {
 	return o.Payload
 }
@@ -83,12 +77,11 @@ func NewGetSubscriptionByKeyNotFound() *GetSubscriptionByKeyNotFound {
 	return &GetSubscriptionByKeyNotFound{}
 }
 
-/*GetSubscriptionByKeyNotFound handles this case with default header values.
+/* GetSubscriptionByKeyNotFound describes a response with status code 404, with default header values.
 
 Subscription not found
 */
 type GetSubscriptionByKeyNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetSubscriptionByKeyNotFound) Error() string {

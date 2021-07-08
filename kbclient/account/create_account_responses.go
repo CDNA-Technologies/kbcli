@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CreateAccountReader is a Reader for the CreateAccount structure.
@@ -25,21 +23,20 @@ type CreateAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCreateAccountCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 400:
+		result := NewCreateAccountBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +45,17 @@ func NewCreateAccountCreated() *CreateAccountCreated {
 	return &CreateAccountCreated{}
 }
 
-/*CreateAccountCreated handles this case with default header values.
+/* CreateAccountCreated describes a response with status code 201, with default header values.
 
 Account created successfully
 */
 type CreateAccountCreated struct {
 	Payload *kbmodel.Account
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateAccountCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/accounts][%d] createAccountCreated  %+v", 201, o.Payload)
 }
-
 func (o *CreateAccountCreated) GetPayload() *kbmodel.Account {
 	return o.Payload
 }
@@ -83,12 +77,11 @@ func NewCreateAccountBadRequest() *CreateAccountBadRequest {
 	return &CreateAccountBadRequest{}
 }
 
-/*CreateAccountBadRequest handles this case with default header values.
+/* CreateAccountBadRequest describes a response with status code 400, with default header values.
 
 Invalid account data supplied
 */
 type CreateAccountBadRequest struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateAccountBadRequest) Error() string {

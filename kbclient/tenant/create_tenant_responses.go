@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // CreateTenantReader is a Reader for the CreateTenant structure.
@@ -25,21 +23,20 @@ type CreateTenantReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateTenantReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
-	case 201, 200:
+	case 201:
 		result := NewCreateTenantCreated()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 409:
+		result := NewCreateTenantConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +45,17 @@ func NewCreateTenantCreated() *CreateTenantCreated {
 	return &CreateTenantCreated{}
 }
 
-/*CreateTenantCreated handles this case with default header values.
+/* CreateTenantCreated describes a response with status code 201, with default header values.
 
 Tenant created successfully
 */
 type CreateTenantCreated struct {
 	Payload *kbmodel.Tenant
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateTenantCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/tenants][%d] createTenantCreated  %+v", 201, o.Payload)
 }
-
 func (o *CreateTenantCreated) GetPayload() *kbmodel.Tenant {
 	return o.Payload
 }
@@ -83,12 +77,11 @@ func NewCreateTenantConflict() *CreateTenantConflict {
 	return &CreateTenantConflict{}
 }
 
-/*CreateTenantConflict handles this case with default header values.
+/* CreateTenantConflict describes a response with status code 409, with default header values.
 
 Tenant already exists
 */
 type CreateTenantConflict struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateTenantConflict) Error() string {

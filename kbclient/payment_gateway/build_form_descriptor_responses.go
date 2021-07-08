@@ -10,11 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	kbmodel "github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/killbill/kbcli/v2/kbmodel"
 )
 
 // BuildFormDescriptorReader is a Reader for the BuildFormDescriptor structure.
@@ -25,21 +23,20 @@ type BuildFormDescriptorReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *BuildFormDescriptorReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewBuildFormDescriptorOK()
-		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
-	default:
-		errorResult := kbcommon.NewKillbillError(response.Code())
-		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+	case 404:
+		result := NewBuildFormDescriptorNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return nil, errorResult
+		return nil, result
+	default:
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,20 +45,17 @@ func NewBuildFormDescriptorOK() *BuildFormDescriptorOK {
 	return &BuildFormDescriptorOK{}
 }
 
-/*BuildFormDescriptorOK handles this case with default header values.
+/* BuildFormDescriptorOK describes a response with status code 200, with default header values.
 
 successful operation
 */
 type BuildFormDescriptorOK struct {
 	Payload *kbmodel.HostedPaymentPageFormDescriptor
-
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *BuildFormDescriptorOK) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/paymentGateways/hosted/form/{accountId}][%d] buildFormDescriptorOK  %+v", 200, o.Payload)
 }
-
 func (o *BuildFormDescriptorOK) GetPayload() *kbmodel.HostedPaymentPageFormDescriptor {
 	return o.Payload
 }
@@ -83,12 +77,11 @@ func NewBuildFormDescriptorNotFound() *BuildFormDescriptorNotFound {
 	return &BuildFormDescriptorNotFound{}
 }
 
-/*BuildFormDescriptorNotFound handles this case with default header values.
+/* BuildFormDescriptorNotFound describes a response with status code 404, with default header values.
 
 Account not found
 */
 type BuildFormDescriptorNotFound struct {
-	HttpResponse runtime.ClientResponse
 }
 
 func (o *BuildFormDescriptorNotFound) Error() string {

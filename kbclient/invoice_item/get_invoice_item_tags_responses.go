@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/killbill/kbcli/v2/kbmodel"
+	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetInvoiceItemTagsReader is a Reader for the GetInvoiceItemTags structure.

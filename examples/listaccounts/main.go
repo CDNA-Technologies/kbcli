@@ -1,15 +1,14 @@
 package main
 
 import (
-	"context"
 	"encoding/base64"
 	"fmt"
 
+	"github.com/CDNA-Technologies/kbcli/v3/kbclient"
+	"github.com/CDNA-Technologies/kbcli/v3/kbclient/account"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/killbill/kbcli/v2/kbclient"
-	"github.com/killbill/kbcli/v2/kbclient/account"
 )
 
 // NewClient creates new kill bill client
@@ -19,6 +18,12 @@ func NewClient() *kbclient.KillBill {
 	trp.Producers["text/xml"] = runtime.TextProducer()
 	// Set this to true to dump http messages
 	trp.Debug = false
+	client := kbclient.New(trp, strfmt.Default)
+	return client
+}
+
+func main() {
+	c := NewClient()
 	apiKey := "bob"
 	apiSecret := "lazar"
 	authWriter := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
@@ -34,24 +39,7 @@ func NewClient() *kbclient.KillBill {
 		}
 		return nil
 	})
-	client := kbclient.New(trp, strfmt.Default, authWriter, kbclient.KillbillDefaults{})
-
-	// Set defaults. You can override them in each API call.
-	createdBy := "John Doe"
-	comment := "Created by John Doe"
-	reason := ""
-
-	client.SetDefaults(kbclient.KillbillDefaults{
-		CreatedBy: &createdBy,
-		Comment:   &comment,
-		Reason:    &reason,
-	})
-	return client
-}
-
-func main() {
-	c := NewClient()
-	resp, err := c.Account.GetAccounts(context.Background(), &account.GetAccountsParams{})
+	resp, err := c.Account.GetAccounts(&account.GetAccountsParams{}, authWriter)
 	if err != nil {
 		panic(err)
 	}

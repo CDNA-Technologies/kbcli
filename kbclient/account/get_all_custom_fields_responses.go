@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetAllCustomFieldsReader is a Reader for the GetAllCustomFields structure.
@@ -23,26 +25,21 @@ type GetAllCustomFieldsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetAllCustomFieldsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetAllCustomFieldsOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewGetAllCustomFieldsBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewGetAllCustomFieldsNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -51,17 +48,20 @@ func NewGetAllCustomFieldsOK() *GetAllCustomFieldsOK {
 	return &GetAllCustomFieldsOK{}
 }
 
-/* GetAllCustomFieldsOK describes a response with status code 200, with default header values.
+/*GetAllCustomFieldsOK handles this case with default header values.
 
 successful operation
 */
 type GetAllCustomFieldsOK struct {
 	Payload []*kbmodel.CustomField
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetAllCustomFieldsOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/accounts/{accountId}/allCustomFields][%d] getAllCustomFieldsOK  %+v", 200, o.Payload)
 }
+
 func (o *GetAllCustomFieldsOK) GetPayload() []*kbmodel.CustomField {
 	return o.Payload
 }
@@ -81,11 +81,12 @@ func NewGetAllCustomFieldsBadRequest() *GetAllCustomFieldsBadRequest {
 	return &GetAllCustomFieldsBadRequest{}
 }
 
-/* GetAllCustomFieldsBadRequest describes a response with status code 400, with default header values.
+/*GetAllCustomFieldsBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type GetAllCustomFieldsBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetAllCustomFieldsBadRequest) Error() string {
@@ -102,11 +103,12 @@ func NewGetAllCustomFieldsNotFound() *GetAllCustomFieldsNotFound {
 	return &GetAllCustomFieldsNotFound{}
 }
 
-/* GetAllCustomFieldsNotFound describes a response with status code 404, with default header values.
+/*GetAllCustomFieldsNotFound handles this case with default header values.
 
 Account not found
 */
 type GetAllCustomFieldsNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetAllCustomFieldsNotFound) Error() string {

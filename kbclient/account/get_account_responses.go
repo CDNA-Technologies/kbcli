@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetAccountReader is a Reader for the GetAccount structure.
@@ -23,26 +25,21 @@ type GetAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetAccountOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewGetAccountBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewGetAccountNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -51,17 +48,20 @@ func NewGetAccountOK() *GetAccountOK {
 	return &GetAccountOK{}
 }
 
-/* GetAccountOK describes a response with status code 200, with default header values.
+/*GetAccountOK handles this case with default header values.
 
 successful operation
 */
 type GetAccountOK struct {
 	Payload *kbmodel.Account
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetAccountOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/accounts/{accountId}][%d] getAccountOK  %+v", 200, o.Payload)
 }
+
 func (o *GetAccountOK) GetPayload() *kbmodel.Account {
 	return o.Payload
 }
@@ -83,11 +83,12 @@ func NewGetAccountBadRequest() *GetAccountBadRequest {
 	return &GetAccountBadRequest{}
 }
 
-/* GetAccountBadRequest describes a response with status code 400, with default header values.
+/*GetAccountBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type GetAccountBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetAccountBadRequest) Error() string {
@@ -104,11 +105,12 @@ func NewGetAccountNotFound() *GetAccountNotFound {
 	return &GetAccountNotFound{}
 }
 
-/* GetAccountNotFound describes a response with status code 404, with default header values.
+/*GetAccountNotFound handles this case with default header values.
 
 Account not found
 */
 type GetAccountNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetAccountNotFound) Error() string {

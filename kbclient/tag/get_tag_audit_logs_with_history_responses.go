@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetTagAuditLogsWithHistoryReader is a Reader for the GetTagAuditLogsWithHistory structure.
@@ -23,20 +25,21 @@ type GetTagAuditLogsWithHistoryReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetTagAuditLogsWithHistoryReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetTagAuditLogsWithHistoryOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 404:
-		result := NewGetTagAuditLogsWithHistoryNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
+
+	default:
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
 			return nil, err
 		}
-		return nil, result
-	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, errorResult
 	}
 }
 
@@ -45,17 +48,20 @@ func NewGetTagAuditLogsWithHistoryOK() *GetTagAuditLogsWithHistoryOK {
 	return &GetTagAuditLogsWithHistoryOK{}
 }
 
-/* GetTagAuditLogsWithHistoryOK describes a response with status code 200, with default header values.
+/*GetTagAuditLogsWithHistoryOK handles this case with default header values.
 
 successful operation
 */
 type GetTagAuditLogsWithHistoryOK struct {
 	Payload []*kbmodel.AuditLog
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetTagAuditLogsWithHistoryOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/tags/{tagId}/auditLogsWithHistory][%d] getTagAuditLogsWithHistoryOK  %+v", 200, o.Payload)
 }
+
 func (o *GetTagAuditLogsWithHistoryOK) GetPayload() []*kbmodel.AuditLog {
 	return o.Payload
 }
@@ -75,11 +81,12 @@ func NewGetTagAuditLogsWithHistoryNotFound() *GetTagAuditLogsWithHistoryNotFound
 	return &GetTagAuditLogsWithHistoryNotFound{}
 }
 
-/* GetTagAuditLogsWithHistoryNotFound describes a response with status code 404, with default header values.
+/*GetTagAuditLogsWithHistoryNotFound handles this case with default header values.
 
 Account not found
 */
 type GetTagAuditLogsWithHistoryNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetTagAuditLogsWithHistoryNotFound) Error() string {

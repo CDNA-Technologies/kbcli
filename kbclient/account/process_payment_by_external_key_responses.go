@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // ProcessPaymentByExternalKeyReader is a Reader for the ProcessPaymentByExternalKey structure.
@@ -23,56 +25,21 @@ type ProcessPaymentByExternalKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ProcessPaymentByExternalKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewProcessPaymentByExternalKeyCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewProcessPaymentByExternalKeyBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 402:
-		result := NewProcessPaymentByExternalKeyPaymentRequired()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewProcessPaymentByExternalKeyNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 422:
-		result := NewProcessPaymentByExternalKeyUnprocessableEntity()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 502:
-		result := NewProcessPaymentByExternalKeyBadGateway()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 503:
-		result := NewProcessPaymentByExternalKeyServiceUnavailable()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 504:
-		result := NewProcessPaymentByExternalKeyGatewayTimeout()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -81,17 +48,20 @@ func NewProcessPaymentByExternalKeyCreated() *ProcessPaymentByExternalKeyCreated
 	return &ProcessPaymentByExternalKeyCreated{}
 }
 
-/* ProcessPaymentByExternalKeyCreated describes a response with status code 201, with default header values.
+/*ProcessPaymentByExternalKeyCreated handles this case with default header values.
 
 Payment transaction created successfully
 */
 type ProcessPaymentByExternalKeyCreated struct {
 	Payload *kbmodel.Payment
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentByExternalKeyCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/accounts/payments][%d] processPaymentByExternalKeyCreated  %+v", 201, o.Payload)
 }
+
 func (o *ProcessPaymentByExternalKeyCreated) GetPayload() *kbmodel.Payment {
 	return o.Payload
 }
@@ -113,11 +83,12 @@ func NewProcessPaymentByExternalKeyBadRequest() *ProcessPaymentByExternalKeyBadR
 	return &ProcessPaymentByExternalKeyBadRequest{}
 }
 
-/* ProcessPaymentByExternalKeyBadRequest describes a response with status code 400, with default header values.
+/*ProcessPaymentByExternalKeyBadRequest handles this case with default header values.
 
 Invalid account external key supplied
 */
 type ProcessPaymentByExternalKeyBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentByExternalKeyBadRequest) Error() string {
@@ -134,11 +105,12 @@ func NewProcessPaymentByExternalKeyPaymentRequired() *ProcessPaymentByExternalKe
 	return &ProcessPaymentByExternalKeyPaymentRequired{}
 }
 
-/* ProcessPaymentByExternalKeyPaymentRequired describes a response with status code 402, with default header values.
+/*ProcessPaymentByExternalKeyPaymentRequired handles this case with default header values.
 
 Transaction declined by gateway
 */
 type ProcessPaymentByExternalKeyPaymentRequired struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentByExternalKeyPaymentRequired) Error() string {
@@ -155,11 +127,12 @@ func NewProcessPaymentByExternalKeyNotFound() *ProcessPaymentByExternalKeyNotFou
 	return &ProcessPaymentByExternalKeyNotFound{}
 }
 
-/* ProcessPaymentByExternalKeyNotFound describes a response with status code 404, with default header values.
+/*ProcessPaymentByExternalKeyNotFound handles this case with default header values.
 
 Account not found
 */
 type ProcessPaymentByExternalKeyNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentByExternalKeyNotFound) Error() string {
@@ -176,11 +149,12 @@ func NewProcessPaymentByExternalKeyUnprocessableEntity() *ProcessPaymentByExtern
 	return &ProcessPaymentByExternalKeyUnprocessableEntity{}
 }
 
-/* ProcessPaymentByExternalKeyUnprocessableEntity describes a response with status code 422, with default header values.
+/*ProcessPaymentByExternalKeyUnprocessableEntity handles this case with default header values.
 
 Payment is aborted by a control plugin
 */
 type ProcessPaymentByExternalKeyUnprocessableEntity struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentByExternalKeyUnprocessableEntity) Error() string {
@@ -197,11 +171,12 @@ func NewProcessPaymentByExternalKeyBadGateway() *ProcessPaymentByExternalKeyBadG
 	return &ProcessPaymentByExternalKeyBadGateway{}
 }
 
-/* ProcessPaymentByExternalKeyBadGateway describes a response with status code 502, with default header values.
+/*ProcessPaymentByExternalKeyBadGateway handles this case with default header values.
 
 Failed to submit payment transaction
 */
 type ProcessPaymentByExternalKeyBadGateway struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentByExternalKeyBadGateway) Error() string {
@@ -218,11 +193,12 @@ func NewProcessPaymentByExternalKeyServiceUnavailable() *ProcessPaymentByExterna
 	return &ProcessPaymentByExternalKeyServiceUnavailable{}
 }
 
-/* ProcessPaymentByExternalKeyServiceUnavailable describes a response with status code 503, with default header values.
+/*ProcessPaymentByExternalKeyServiceUnavailable handles this case with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type ProcessPaymentByExternalKeyServiceUnavailable struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentByExternalKeyServiceUnavailable) Error() string {
@@ -239,11 +215,12 @@ func NewProcessPaymentByExternalKeyGatewayTimeout() *ProcessPaymentByExternalKey
 	return &ProcessPaymentByExternalKeyGatewayTimeout{}
 }
 
-/* ProcessPaymentByExternalKeyGatewayTimeout describes a response with status code 504, with default header values.
+/*ProcessPaymentByExternalKeyGatewayTimeout handles this case with default header values.
 
 Payment operation timeout
 */
 type ProcessPaymentByExternalKeyGatewayTimeout struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentByExternalKeyGatewayTimeout) Error() string {

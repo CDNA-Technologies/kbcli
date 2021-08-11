@@ -7,9 +7,12 @@ package account
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // CloseAccountReader is a Reader for the CloseAccount structure.
@@ -20,20 +23,21 @@ type CloseAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CloseAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 204:
 		result := NewCloseAccountNoContent()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewCloseAccountBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
+
+	default:
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
 			return nil, err
 		}
-		return nil, result
-	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, errorResult
 	}
 }
 
@@ -42,11 +46,12 @@ func NewCloseAccountNoContent() *CloseAccountNoContent {
 	return &CloseAccountNoContent{}
 }
 
-/* CloseAccountNoContent describes a response with status code 204, with default header values.
+/*CloseAccountNoContent handles this case with default header values.
 
 Successful operation
 */
 type CloseAccountNoContent struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CloseAccountNoContent) Error() string {
@@ -63,11 +68,12 @@ func NewCloseAccountBadRequest() *CloseAccountBadRequest {
 	return &CloseAccountBadRequest{}
 }
 
-/* CloseAccountBadRequest describes a response with status code 400, with default header values.
+/*CloseAccountBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type CloseAccountBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CloseAccountBadRequest) Error() string {

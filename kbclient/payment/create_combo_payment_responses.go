@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // CreateComboPaymentReader is a Reader for the CreateComboPayment structure.
@@ -23,50 +25,21 @@ type CreateComboPaymentReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateComboPaymentReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewCreateComboPaymentCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewCreateComboPaymentBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 402:
-		result := NewCreateComboPaymentPaymentRequired()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 422:
-		result := NewCreateComboPaymentUnprocessableEntity()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 502:
-		result := NewCreateComboPaymentBadGateway()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 503:
-		result := NewCreateComboPaymentServiceUnavailable()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 504:
-		result := NewCreateComboPaymentGatewayTimeout()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -75,17 +48,20 @@ func NewCreateComboPaymentCreated() *CreateComboPaymentCreated {
 	return &CreateComboPaymentCreated{}
 }
 
-/* CreateComboPaymentCreated describes a response with status code 201, with default header values.
+/*CreateComboPaymentCreated handles this case with default header values.
 
 Payment transaction created successfully
 */
 type CreateComboPaymentCreated struct {
 	Payload *kbmodel.Payment
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateComboPaymentCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/payments/combo][%d] createComboPaymentCreated  %+v", 201, o.Payload)
 }
+
 func (o *CreateComboPaymentCreated) GetPayload() *kbmodel.Payment {
 	return o.Payload
 }
@@ -107,11 +83,12 @@ func NewCreateComboPaymentBadRequest() *CreateComboPaymentBadRequest {
 	return &CreateComboPaymentBadRequest{}
 }
 
-/* CreateComboPaymentBadRequest describes a response with status code 400, with default header values.
+/*CreateComboPaymentBadRequest handles this case with default header values.
 
 Invalid data for Account or PaymentMethod
 */
 type CreateComboPaymentBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateComboPaymentBadRequest) Error() string {
@@ -128,11 +105,12 @@ func NewCreateComboPaymentPaymentRequired() *CreateComboPaymentPaymentRequired {
 	return &CreateComboPaymentPaymentRequired{}
 }
 
-/* CreateComboPaymentPaymentRequired describes a response with status code 402, with default header values.
+/*CreateComboPaymentPaymentRequired handles this case with default header values.
 
 Transaction declined by gateway
 */
 type CreateComboPaymentPaymentRequired struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateComboPaymentPaymentRequired) Error() string {
@@ -149,11 +127,12 @@ func NewCreateComboPaymentUnprocessableEntity() *CreateComboPaymentUnprocessable
 	return &CreateComboPaymentUnprocessableEntity{}
 }
 
-/* CreateComboPaymentUnprocessableEntity describes a response with status code 422, with default header values.
+/*CreateComboPaymentUnprocessableEntity handles this case with default header values.
 
 Payment is aborted by a control plugin
 */
 type CreateComboPaymentUnprocessableEntity struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateComboPaymentUnprocessableEntity) Error() string {
@@ -170,11 +149,12 @@ func NewCreateComboPaymentBadGateway() *CreateComboPaymentBadGateway {
 	return &CreateComboPaymentBadGateway{}
 }
 
-/* CreateComboPaymentBadGateway describes a response with status code 502, with default header values.
+/*CreateComboPaymentBadGateway handles this case with default header values.
 
 Failed to submit payment transaction
 */
 type CreateComboPaymentBadGateway struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateComboPaymentBadGateway) Error() string {
@@ -191,11 +171,12 @@ func NewCreateComboPaymentServiceUnavailable() *CreateComboPaymentServiceUnavail
 	return &CreateComboPaymentServiceUnavailable{}
 }
 
-/* CreateComboPaymentServiceUnavailable describes a response with status code 503, with default header values.
+/*CreateComboPaymentServiceUnavailable handles this case with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type CreateComboPaymentServiceUnavailable struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateComboPaymentServiceUnavailable) Error() string {
@@ -212,11 +193,12 @@ func NewCreateComboPaymentGatewayTimeout() *CreateComboPaymentGatewayTimeout {
 	return &CreateComboPaymentGatewayTimeout{}
 }
 
-/* CreateComboPaymentGatewayTimeout describes a response with status code 504, with default header values.
+/*CreateComboPaymentGatewayTimeout handles this case with default header values.
 
 Payment operation timeout
 */
 type CreateComboPaymentGatewayTimeout struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateComboPaymentGatewayTimeout) Error() string {

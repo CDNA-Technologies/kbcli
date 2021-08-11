@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetBlockingStateAuditLogsWithHistoryReader is a Reader for the GetBlockingStateAuditLogsWithHistory structure.
@@ -23,20 +25,21 @@ type GetBlockingStateAuditLogsWithHistoryReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetBlockingStateAuditLogsWithHistoryReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetBlockingStateAuditLogsWithHistoryOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 404:
-		result := NewGetBlockingStateAuditLogsWithHistoryNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
+
+	default:
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
 			return nil, err
 		}
-		return nil, result
-	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, errorResult
 	}
 }
 
@@ -45,17 +48,20 @@ func NewGetBlockingStateAuditLogsWithHistoryOK() *GetBlockingStateAuditLogsWithH
 	return &GetBlockingStateAuditLogsWithHistoryOK{}
 }
 
-/* GetBlockingStateAuditLogsWithHistoryOK describes a response with status code 200, with default header values.
+/*GetBlockingStateAuditLogsWithHistoryOK handles this case with default header values.
 
 successful operation
 */
 type GetBlockingStateAuditLogsWithHistoryOK struct {
 	Payload []*kbmodel.AuditLog
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetBlockingStateAuditLogsWithHistoryOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/accounts/block/{blockingId}/auditLogsWithHistory][%d] getBlockingStateAuditLogsWithHistoryOK  %+v", 200, o.Payload)
 }
+
 func (o *GetBlockingStateAuditLogsWithHistoryOK) GetPayload() []*kbmodel.AuditLog {
 	return o.Payload
 }
@@ -75,11 +81,12 @@ func NewGetBlockingStateAuditLogsWithHistoryNotFound() *GetBlockingStateAuditLog
 	return &GetBlockingStateAuditLogsWithHistoryNotFound{}
 }
 
-/* GetBlockingStateAuditLogsWithHistoryNotFound describes a response with status code 404, with default header values.
+/*GetBlockingStateAuditLogsWithHistoryNotFound handles this case with default header values.
 
 Blocking state  not found
 */
 type GetBlockingStateAuditLogsWithHistoryNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetBlockingStateAuditLogsWithHistoryNotFound) Error() string {

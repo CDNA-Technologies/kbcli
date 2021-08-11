@@ -7,9 +7,12 @@ package payment
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // CancelScheduledPaymentTransactionByExternalKeyReader is a Reader for the CancelScheduledPaymentTransactionByExternalKey structure.
@@ -20,20 +23,21 @@ type CancelScheduledPaymentTransactionByExternalKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CancelScheduledPaymentTransactionByExternalKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 204:
 		result := NewCancelScheduledPaymentTransactionByExternalKeyNoContent()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewCancelScheduledPaymentTransactionByExternalKeyBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
+
+	default:
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
 			return nil, err
 		}
-		return nil, result
-	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, errorResult
 	}
 }
 
@@ -42,11 +46,12 @@ func NewCancelScheduledPaymentTransactionByExternalKeyNoContent() *CancelSchedul
 	return &CancelScheduledPaymentTransactionByExternalKeyNoContent{}
 }
 
-/* CancelScheduledPaymentTransactionByExternalKeyNoContent describes a response with status code 204, with default header values.
+/*CancelScheduledPaymentTransactionByExternalKeyNoContent handles this case with default header values.
 
 Successful operation
 */
 type CancelScheduledPaymentTransactionByExternalKeyNoContent struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CancelScheduledPaymentTransactionByExternalKeyNoContent) Error() string {
@@ -63,11 +68,12 @@ func NewCancelScheduledPaymentTransactionByExternalKeyBadRequest() *CancelSchedu
 	return &CancelScheduledPaymentTransactionByExternalKeyBadRequest{}
 }
 
-/* CancelScheduledPaymentTransactionByExternalKeyBadRequest describes a response with status code 400, with default header values.
+/*CancelScheduledPaymentTransactionByExternalKeyBadRequest handles this case with default header values.
 
 Invalid paymentTransactionExternalKey supplied
 */
 type CancelScheduledPaymentTransactionByExternalKeyBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CancelScheduledPaymentTransactionByExternalKeyBadRequest) Error() string {

@@ -7,9 +7,12 @@ package admin
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // InvalidatesCacheByAccountReader is a Reader for the InvalidatesCacheByAccount structure.
@@ -20,20 +23,21 @@ type InvalidatesCacheByAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *InvalidatesCacheByAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 204:
 		result := NewInvalidatesCacheByAccountNoContent()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewInvalidatesCacheByAccountBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
+
+	default:
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
 			return nil, err
 		}
-		return nil, result
-	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, errorResult
 	}
 }
 
@@ -42,11 +46,12 @@ func NewInvalidatesCacheByAccountNoContent() *InvalidatesCacheByAccountNoContent
 	return &InvalidatesCacheByAccountNoContent{}
 }
 
-/* InvalidatesCacheByAccountNoContent describes a response with status code 204, with default header values.
+/*InvalidatesCacheByAccountNoContent handles this case with default header values.
 
 Successful operation
 */
 type InvalidatesCacheByAccountNoContent struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *InvalidatesCacheByAccountNoContent) Error() string {
@@ -63,11 +68,12 @@ func NewInvalidatesCacheByAccountBadRequest() *InvalidatesCacheByAccountBadReque
 	return &InvalidatesCacheByAccountBadRequest{}
 }
 
-/* InvalidatesCacheByAccountBadRequest describes a response with status code 400, with default header values.
+/*InvalidatesCacheByAccountBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type InvalidatesCacheByAccountBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *InvalidatesCacheByAccountBadRequest) Error() string {

@@ -7,9 +7,12 @@ package payment
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // CompleteTransactionByExternalKeyReader is a Reader for the CompleteTransactionByExternalKey structure.
@@ -20,50 +23,21 @@ type CompleteTransactionByExternalKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CompleteTransactionByExternalKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 204:
 		result := NewCompleteTransactionByExternalKeyNoContent()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 402:
-		result := NewCompleteTransactionByExternalKeyPaymentRequired()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewCompleteTransactionByExternalKeyNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 422:
-		result := NewCompleteTransactionByExternalKeyUnprocessableEntity()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 502:
-		result := NewCompleteTransactionByExternalKeyBadGateway()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 503:
-		result := NewCompleteTransactionByExternalKeyServiceUnavailable()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 504:
-		result := NewCompleteTransactionByExternalKeyGatewayTimeout()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -72,11 +46,12 @@ func NewCompleteTransactionByExternalKeyNoContent() *CompleteTransactionByExtern
 	return &CompleteTransactionByExternalKeyNoContent{}
 }
 
-/* CompleteTransactionByExternalKeyNoContent describes a response with status code 204, with default header values.
+/*CompleteTransactionByExternalKeyNoContent handles this case with default header values.
 
 Successful operation
 */
 type CompleteTransactionByExternalKeyNoContent struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteTransactionByExternalKeyNoContent) Error() string {
@@ -93,11 +68,12 @@ func NewCompleteTransactionByExternalKeyPaymentRequired() *CompleteTransactionBy
 	return &CompleteTransactionByExternalKeyPaymentRequired{}
 }
 
-/* CompleteTransactionByExternalKeyPaymentRequired describes a response with status code 402, with default header values.
+/*CompleteTransactionByExternalKeyPaymentRequired handles this case with default header values.
 
 Transaction declined by gateway
 */
 type CompleteTransactionByExternalKeyPaymentRequired struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteTransactionByExternalKeyPaymentRequired) Error() string {
@@ -114,11 +90,12 @@ func NewCompleteTransactionByExternalKeyNotFound() *CompleteTransactionByExterna
 	return &CompleteTransactionByExternalKeyNotFound{}
 }
 
-/* CompleteTransactionByExternalKeyNotFound describes a response with status code 404, with default header values.
+/*CompleteTransactionByExternalKeyNotFound handles this case with default header values.
 
 Account or payment not found
 */
 type CompleteTransactionByExternalKeyNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteTransactionByExternalKeyNotFound) Error() string {
@@ -135,11 +112,12 @@ func NewCompleteTransactionByExternalKeyUnprocessableEntity() *CompleteTransacti
 	return &CompleteTransactionByExternalKeyUnprocessableEntity{}
 }
 
-/* CompleteTransactionByExternalKeyUnprocessableEntity describes a response with status code 422, with default header values.
+/*CompleteTransactionByExternalKeyUnprocessableEntity handles this case with default header values.
 
 Payment is aborted by a control plugin
 */
 type CompleteTransactionByExternalKeyUnprocessableEntity struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteTransactionByExternalKeyUnprocessableEntity) Error() string {
@@ -156,11 +134,12 @@ func NewCompleteTransactionByExternalKeyBadGateway() *CompleteTransactionByExter
 	return &CompleteTransactionByExternalKeyBadGateway{}
 }
 
-/* CompleteTransactionByExternalKeyBadGateway describes a response with status code 502, with default header values.
+/*CompleteTransactionByExternalKeyBadGateway handles this case with default header values.
 
 Failed to submit payment transaction
 */
 type CompleteTransactionByExternalKeyBadGateway struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteTransactionByExternalKeyBadGateway) Error() string {
@@ -177,11 +156,12 @@ func NewCompleteTransactionByExternalKeyServiceUnavailable() *CompleteTransactio
 	return &CompleteTransactionByExternalKeyServiceUnavailable{}
 }
 
-/* CompleteTransactionByExternalKeyServiceUnavailable describes a response with status code 503, with default header values.
+/*CompleteTransactionByExternalKeyServiceUnavailable handles this case with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type CompleteTransactionByExternalKeyServiceUnavailable struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteTransactionByExternalKeyServiceUnavailable) Error() string {
@@ -198,11 +178,12 @@ func NewCompleteTransactionByExternalKeyGatewayTimeout() *CompleteTransactionByE
 	return &CompleteTransactionByExternalKeyGatewayTimeout{}
 }
 
-/* CompleteTransactionByExternalKeyGatewayTimeout describes a response with status code 504, with default header values.
+/*CompleteTransactionByExternalKeyGatewayTimeout handles this case with default header values.
 
 Payment operation timeout
 */
 type CompleteTransactionByExternalKeyGatewayTimeout struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CompleteTransactionByExternalKeyGatewayTimeout) Error() string {

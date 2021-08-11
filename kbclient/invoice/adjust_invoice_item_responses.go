@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // AdjustInvoiceItemReader is a Reader for the AdjustInvoiceItem structure.
@@ -23,26 +25,21 @@ type AdjustInvoiceItemReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *AdjustInvoiceItemReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewAdjustInvoiceItemCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewAdjustInvoiceItemBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewAdjustInvoiceItemNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -51,17 +48,20 @@ func NewAdjustInvoiceItemCreated() *AdjustInvoiceItemCreated {
 	return &AdjustInvoiceItemCreated{}
 }
 
-/* AdjustInvoiceItemCreated describes a response with status code 201, with default header values.
+/*AdjustInvoiceItemCreated handles this case with default header values.
 
 Created adjustment Successfully
 */
 type AdjustInvoiceItemCreated struct {
 	Payload *kbmodel.Invoice
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *AdjustInvoiceItemCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/invoices/{invoiceId}][%d] adjustInvoiceItemCreated  %+v", 201, o.Payload)
 }
+
 func (o *AdjustInvoiceItemCreated) GetPayload() *kbmodel.Invoice {
 	return o.Payload
 }
@@ -83,11 +83,12 @@ func NewAdjustInvoiceItemBadRequest() *AdjustInvoiceItemBadRequest {
 	return &AdjustInvoiceItemBadRequest{}
 }
 
-/* AdjustInvoiceItemBadRequest describes a response with status code 400, with default header values.
+/*AdjustInvoiceItemBadRequest handles this case with default header values.
 
 Invalid account id, invoice id or invoice item id supplied
 */
 type AdjustInvoiceItemBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *AdjustInvoiceItemBadRequest) Error() string {
@@ -104,11 +105,12 @@ func NewAdjustInvoiceItemNotFound() *AdjustInvoiceItemNotFound {
 	return &AdjustInvoiceItemNotFound{}
 }
 
-/* AdjustInvoiceItemNotFound describes a response with status code 404, with default header values.
+/*AdjustInvoiceItemNotFound handles this case with default header values.
 
 Invoice not found
 */
 type AdjustInvoiceItemNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *AdjustInvoiceItemNotFound) Error() string {

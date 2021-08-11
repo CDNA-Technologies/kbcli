@@ -6,17 +6,16 @@ package kbmodel
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"context"
 	"strconv"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // Bundle bundle
-//
 // swagger:model Bundle
 type Bundle struct {
 
@@ -86,6 +85,7 @@ func (m *Bundle) validateAccountID(formats strfmt.Registry) error {
 }
 
 func (m *Bundle) validateAuditLogs(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.AuditLogs) { // not required
 		return nil
 	}
@@ -110,6 +110,7 @@ func (m *Bundle) validateAuditLogs(formats strfmt.Registry) error {
 }
 
 func (m *Bundle) validateBundleID(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.BundleID) { // not required
 		return nil
 	}
@@ -122,6 +123,7 @@ func (m *Bundle) validateBundleID(formats strfmt.Registry) error {
 }
 
 func (m *Bundle) validateSubscriptions(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.Subscriptions) { // not required
 		return nil
 	}
@@ -146,84 +148,13 @@ func (m *Bundle) validateSubscriptions(formats strfmt.Registry) error {
 }
 
 func (m *Bundle) validateTimeline(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.Timeline) { // not required
 		return nil
 	}
 
 	if m.Timeline != nil {
 		if err := m.Timeline.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("timeline")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-// ContextValidate validate this bundle based on the context it is used
-func (m *Bundle) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.contextValidateAuditLogs(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateSubscriptions(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateTimeline(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *Bundle) contextValidateAuditLogs(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.AuditLogs); i++ {
-
-		if m.AuditLogs[i] != nil {
-			if err := m.AuditLogs[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("auditLogs" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Bundle) contextValidateSubscriptions(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.Subscriptions); i++ {
-
-		if m.Subscriptions[i] != nil {
-			if err := m.Subscriptions[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("subscriptions" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Bundle) contextValidateTimeline(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Timeline != nil {
-		if err := m.Timeline.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("timeline")
 			}

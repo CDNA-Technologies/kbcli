@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // ChargebackPaymentReader is a Reader for the ChargebackPayment structure.
@@ -23,56 +25,21 @@ type ChargebackPaymentReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ChargebackPaymentReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewChargebackPaymentCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewChargebackPaymentBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 402:
-		result := NewChargebackPaymentPaymentRequired()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewChargebackPaymentNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 422:
-		result := NewChargebackPaymentUnprocessableEntity()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 502:
-		result := NewChargebackPaymentBadGateway()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 503:
-		result := NewChargebackPaymentServiceUnavailable()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 504:
-		result := NewChargebackPaymentGatewayTimeout()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -81,17 +48,20 @@ func NewChargebackPaymentCreated() *ChargebackPaymentCreated {
 	return &ChargebackPaymentCreated{}
 }
 
-/* ChargebackPaymentCreated describes a response with status code 201, with default header values.
+/*ChargebackPaymentCreated handles this case with default header values.
 
 Payment transaction created successfully
 */
 type ChargebackPaymentCreated struct {
 	Payload *kbmodel.Payment
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChargebackPaymentCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/payments/{paymentId}/chargebacks][%d] chargebackPaymentCreated  %+v", 201, o.Payload)
 }
+
 func (o *ChargebackPaymentCreated) GetPayload() *kbmodel.Payment {
 	return o.Payload
 }
@@ -113,11 +83,12 @@ func NewChargebackPaymentBadRequest() *ChargebackPaymentBadRequest {
 	return &ChargebackPaymentBadRequest{}
 }
 
-/* ChargebackPaymentBadRequest describes a response with status code 400, with default header values.
+/*ChargebackPaymentBadRequest handles this case with default header values.
 
 Invalid paymentId supplied
 */
 type ChargebackPaymentBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChargebackPaymentBadRequest) Error() string {
@@ -134,11 +105,12 @@ func NewChargebackPaymentPaymentRequired() *ChargebackPaymentPaymentRequired {
 	return &ChargebackPaymentPaymentRequired{}
 }
 
-/* ChargebackPaymentPaymentRequired describes a response with status code 402, with default header values.
+/*ChargebackPaymentPaymentRequired handles this case with default header values.
 
 Transaction declined by gateway
 */
 type ChargebackPaymentPaymentRequired struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChargebackPaymentPaymentRequired) Error() string {
@@ -155,11 +127,12 @@ func NewChargebackPaymentNotFound() *ChargebackPaymentNotFound {
 	return &ChargebackPaymentNotFound{}
 }
 
-/* ChargebackPaymentNotFound describes a response with status code 404, with default header values.
+/*ChargebackPaymentNotFound handles this case with default header values.
 
 Account or payment not found
 */
 type ChargebackPaymentNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChargebackPaymentNotFound) Error() string {
@@ -176,11 +149,12 @@ func NewChargebackPaymentUnprocessableEntity() *ChargebackPaymentUnprocessableEn
 	return &ChargebackPaymentUnprocessableEntity{}
 }
 
-/* ChargebackPaymentUnprocessableEntity describes a response with status code 422, with default header values.
+/*ChargebackPaymentUnprocessableEntity handles this case with default header values.
 
 Payment is aborted by a control plugin
 */
 type ChargebackPaymentUnprocessableEntity struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChargebackPaymentUnprocessableEntity) Error() string {
@@ -197,11 +171,12 @@ func NewChargebackPaymentBadGateway() *ChargebackPaymentBadGateway {
 	return &ChargebackPaymentBadGateway{}
 }
 
-/* ChargebackPaymentBadGateway describes a response with status code 502, with default header values.
+/*ChargebackPaymentBadGateway handles this case with default header values.
 
 Failed to submit payment transaction
 */
 type ChargebackPaymentBadGateway struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChargebackPaymentBadGateway) Error() string {
@@ -218,11 +193,12 @@ func NewChargebackPaymentServiceUnavailable() *ChargebackPaymentServiceUnavailab
 	return &ChargebackPaymentServiceUnavailable{}
 }
 
-/* ChargebackPaymentServiceUnavailable describes a response with status code 503, with default header values.
+/*ChargebackPaymentServiceUnavailable handles this case with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type ChargebackPaymentServiceUnavailable struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChargebackPaymentServiceUnavailable) Error() string {
@@ -239,11 +215,12 @@ func NewChargebackPaymentGatewayTimeout() *ChargebackPaymentGatewayTimeout {
 	return &ChargebackPaymentGatewayTimeout{}
 }
 
-/* ChargebackPaymentGatewayTimeout describes a response with status code 504, with default header values.
+/*ChargebackPaymentGatewayTimeout handles this case with default header values.
 
 Payment operation timeout
 */
 type ChargebackPaymentGatewayTimeout struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ChargebackPaymentGatewayTimeout) Error() string {

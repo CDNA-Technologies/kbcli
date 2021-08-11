@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetSubscriptionTagsReader is a Reader for the GetSubscriptionTags structure.
@@ -23,26 +25,21 @@ type GetSubscriptionTagsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetSubscriptionTagsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetSubscriptionTagsOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewGetSubscriptionTagsBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewGetSubscriptionTagsNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -51,17 +48,20 @@ func NewGetSubscriptionTagsOK() *GetSubscriptionTagsOK {
 	return &GetSubscriptionTagsOK{}
 }
 
-/* GetSubscriptionTagsOK describes a response with status code 200, with default header values.
+/*GetSubscriptionTagsOK handles this case with default header values.
 
 successful operation
 */
 type GetSubscriptionTagsOK struct {
 	Payload []*kbmodel.Tag
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetSubscriptionTagsOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/subscriptions/{subscriptionId}/tags][%d] getSubscriptionTagsOK  %+v", 200, o.Payload)
 }
+
 func (o *GetSubscriptionTagsOK) GetPayload() []*kbmodel.Tag {
 	return o.Payload
 }
@@ -81,11 +81,12 @@ func NewGetSubscriptionTagsBadRequest() *GetSubscriptionTagsBadRequest {
 	return &GetSubscriptionTagsBadRequest{}
 }
 
-/* GetSubscriptionTagsBadRequest describes a response with status code 400, with default header values.
+/*GetSubscriptionTagsBadRequest handles this case with default header values.
 
 Invalid subscription id supplied
 */
 type GetSubscriptionTagsBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetSubscriptionTagsBadRequest) Error() string {
@@ -102,11 +103,12 @@ func NewGetSubscriptionTagsNotFound() *GetSubscriptionTagsNotFound {
 	return &GetSubscriptionTagsNotFound{}
 }
 
-/* GetSubscriptionTagsNotFound describes a response with status code 404, with default header values.
+/*GetSubscriptionTagsNotFound handles this case with default header values.
 
 Subscription not found
 */
 type GetSubscriptionTagsNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetSubscriptionTagsNotFound) Error() string {

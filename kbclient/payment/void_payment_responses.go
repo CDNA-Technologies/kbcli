@@ -7,9 +7,12 @@ package payment
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // VoidPaymentReader is a Reader for the VoidPayment structure.
@@ -20,56 +23,21 @@ type VoidPaymentReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *VoidPaymentReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 204:
 		result := NewVoidPaymentNoContent()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewVoidPaymentBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 402:
-		result := NewVoidPaymentPaymentRequired()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewVoidPaymentNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 422:
-		result := NewVoidPaymentUnprocessableEntity()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 502:
-		result := NewVoidPaymentBadGateway()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 503:
-		result := NewVoidPaymentServiceUnavailable()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 504:
-		result := NewVoidPaymentGatewayTimeout()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -78,11 +46,12 @@ func NewVoidPaymentNoContent() *VoidPaymentNoContent {
 	return &VoidPaymentNoContent{}
 }
 
-/* VoidPaymentNoContent describes a response with status code 204, with default header values.
+/*VoidPaymentNoContent handles this case with default header values.
 
 Successful operation
 */
 type VoidPaymentNoContent struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentNoContent) Error() string {
@@ -99,11 +68,12 @@ func NewVoidPaymentBadRequest() *VoidPaymentBadRequest {
 	return &VoidPaymentBadRequest{}
 }
 
-/* VoidPaymentBadRequest describes a response with status code 400, with default header values.
+/*VoidPaymentBadRequest handles this case with default header values.
 
 Invalid paymentId supplied
 */
 type VoidPaymentBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentBadRequest) Error() string {
@@ -120,11 +90,12 @@ func NewVoidPaymentPaymentRequired() *VoidPaymentPaymentRequired {
 	return &VoidPaymentPaymentRequired{}
 }
 
-/* VoidPaymentPaymentRequired describes a response with status code 402, with default header values.
+/*VoidPaymentPaymentRequired handles this case with default header values.
 
 Transaction declined by gateway
 */
 type VoidPaymentPaymentRequired struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentPaymentRequired) Error() string {
@@ -141,11 +112,12 @@ func NewVoidPaymentNotFound() *VoidPaymentNotFound {
 	return &VoidPaymentNotFound{}
 }
 
-/* VoidPaymentNotFound describes a response with status code 404, with default header values.
+/*VoidPaymentNotFound handles this case with default header values.
 
 Account or payment not found
 */
 type VoidPaymentNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentNotFound) Error() string {
@@ -162,11 +134,12 @@ func NewVoidPaymentUnprocessableEntity() *VoidPaymentUnprocessableEntity {
 	return &VoidPaymentUnprocessableEntity{}
 }
 
-/* VoidPaymentUnprocessableEntity describes a response with status code 422, with default header values.
+/*VoidPaymentUnprocessableEntity handles this case with default header values.
 
 Payment is aborted by a control plugin
 */
 type VoidPaymentUnprocessableEntity struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentUnprocessableEntity) Error() string {
@@ -183,11 +156,12 @@ func NewVoidPaymentBadGateway() *VoidPaymentBadGateway {
 	return &VoidPaymentBadGateway{}
 }
 
-/* VoidPaymentBadGateway describes a response with status code 502, with default header values.
+/*VoidPaymentBadGateway handles this case with default header values.
 
 Failed to submit payment transaction
 */
 type VoidPaymentBadGateway struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentBadGateway) Error() string {
@@ -204,11 +178,12 @@ func NewVoidPaymentServiceUnavailable() *VoidPaymentServiceUnavailable {
 	return &VoidPaymentServiceUnavailable{}
 }
 
-/* VoidPaymentServiceUnavailable describes a response with status code 503, with default header values.
+/*VoidPaymentServiceUnavailable handles this case with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type VoidPaymentServiceUnavailable struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentServiceUnavailable) Error() string {
@@ -225,11 +200,12 @@ func NewVoidPaymentGatewayTimeout() *VoidPaymentGatewayTimeout {
 	return &VoidPaymentGatewayTimeout{}
 }
 
-/* VoidPaymentGatewayTimeout describes a response with status code 504, with default header values.
+/*VoidPaymentGatewayTimeout handles this case with default header values.
 
 Payment operation timeout
 */
 type VoidPaymentGatewayTimeout struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentGatewayTimeout) Error() string {

@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // AddSubscriptionBlockingStateReader is a Reader for the AddSubscriptionBlockingState structure.
@@ -23,26 +25,21 @@ type AddSubscriptionBlockingStateReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *AddSubscriptionBlockingStateReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewAddSubscriptionBlockingStateCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewAddSubscriptionBlockingStateBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewAddSubscriptionBlockingStateNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -51,17 +48,20 @@ func NewAddSubscriptionBlockingStateCreated() *AddSubscriptionBlockingStateCreat
 	return &AddSubscriptionBlockingStateCreated{}
 }
 
-/* AddSubscriptionBlockingStateCreated describes a response with status code 201, with default header values.
+/*AddSubscriptionBlockingStateCreated handles this case with default header values.
 
 Blocking state created successfully
 */
 type AddSubscriptionBlockingStateCreated struct {
 	Payload []*kbmodel.BlockingState
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddSubscriptionBlockingStateCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/subscriptions/{subscriptionId}/block][%d] addSubscriptionBlockingStateCreated  %+v", 201, o.Payload)
 }
+
 func (o *AddSubscriptionBlockingStateCreated) GetPayload() []*kbmodel.BlockingState {
 	return o.Payload
 }
@@ -81,11 +81,12 @@ func NewAddSubscriptionBlockingStateBadRequest() *AddSubscriptionBlockingStateBa
 	return &AddSubscriptionBlockingStateBadRequest{}
 }
 
-/* AddSubscriptionBlockingStateBadRequest describes a response with status code 400, with default header values.
+/*AddSubscriptionBlockingStateBadRequest handles this case with default header values.
 
 Invalid subscription id supplied
 */
 type AddSubscriptionBlockingStateBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddSubscriptionBlockingStateBadRequest) Error() string {
@@ -102,11 +103,12 @@ func NewAddSubscriptionBlockingStateNotFound() *AddSubscriptionBlockingStateNotF
 	return &AddSubscriptionBlockingStateNotFound{}
 }
 
-/* AddSubscriptionBlockingStateNotFound describes a response with status code 404, with default header values.
+/*AddSubscriptionBlockingStateNotFound handles this case with default header values.
 
 Subscription not found
 */
 type AddSubscriptionBlockingStateNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *AddSubscriptionBlockingStateNotFound) Error() string {

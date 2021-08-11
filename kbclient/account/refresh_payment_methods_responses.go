@@ -7,9 +7,12 @@ package account
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // RefreshPaymentMethodsReader is a Reader for the RefreshPaymentMethods structure.
@@ -20,26 +23,21 @@ type RefreshPaymentMethodsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *RefreshPaymentMethodsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 204:
 		result := NewRefreshPaymentMethodsNoContent()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewRefreshPaymentMethodsBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewRefreshPaymentMethodsNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -48,11 +46,12 @@ func NewRefreshPaymentMethodsNoContent() *RefreshPaymentMethodsNoContent {
 	return &RefreshPaymentMethodsNoContent{}
 }
 
-/* RefreshPaymentMethodsNoContent describes a response with status code 204, with default header values.
+/*RefreshPaymentMethodsNoContent handles this case with default header values.
 
 Successful operation
 */
 type RefreshPaymentMethodsNoContent struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *RefreshPaymentMethodsNoContent) Error() string {
@@ -69,11 +68,12 @@ func NewRefreshPaymentMethodsBadRequest() *RefreshPaymentMethodsBadRequest {
 	return &RefreshPaymentMethodsBadRequest{}
 }
 
-/* RefreshPaymentMethodsBadRequest describes a response with status code 400, with default header values.
+/*RefreshPaymentMethodsBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type RefreshPaymentMethodsBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *RefreshPaymentMethodsBadRequest) Error() string {
@@ -90,11 +90,12 @@ func NewRefreshPaymentMethodsNotFound() *RefreshPaymentMethodsNotFound {
 	return &RefreshPaymentMethodsNotFound{}
 }
 
-/* RefreshPaymentMethodsNotFound describes a response with status code 404, with default header values.
+/*RefreshPaymentMethodsNotFound handles this case with default header values.
 
 Account not found
 */
 type RefreshPaymentMethodsNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *RefreshPaymentMethodsNotFound) Error() string {

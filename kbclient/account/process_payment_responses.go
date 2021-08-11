@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // ProcessPaymentReader is a Reader for the ProcessPayment structure.
@@ -23,56 +25,21 @@ type ProcessPaymentReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ProcessPaymentReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewProcessPaymentCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewProcessPaymentBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 402:
-		result := NewProcessPaymentPaymentRequired()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewProcessPaymentNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 422:
-		result := NewProcessPaymentUnprocessableEntity()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 502:
-		result := NewProcessPaymentBadGateway()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 503:
-		result := NewProcessPaymentServiceUnavailable()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 504:
-		result := NewProcessPaymentGatewayTimeout()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -81,17 +48,20 @@ func NewProcessPaymentCreated() *ProcessPaymentCreated {
 	return &ProcessPaymentCreated{}
 }
 
-/* ProcessPaymentCreated describes a response with status code 201, with default header values.
+/*ProcessPaymentCreated handles this case with default header values.
 
 Payment transaction created successfully
 */
 type ProcessPaymentCreated struct {
 	Payload *kbmodel.Payment
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/accounts/{accountId}/payments][%d] processPaymentCreated  %+v", 201, o.Payload)
 }
+
 func (o *ProcessPaymentCreated) GetPayload() *kbmodel.Payment {
 	return o.Payload
 }
@@ -113,11 +83,12 @@ func NewProcessPaymentBadRequest() *ProcessPaymentBadRequest {
 	return &ProcessPaymentBadRequest{}
 }
 
-/* ProcessPaymentBadRequest describes a response with status code 400, with default header values.
+/*ProcessPaymentBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type ProcessPaymentBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentBadRequest) Error() string {
@@ -134,11 +105,12 @@ func NewProcessPaymentPaymentRequired() *ProcessPaymentPaymentRequired {
 	return &ProcessPaymentPaymentRequired{}
 }
 
-/* ProcessPaymentPaymentRequired describes a response with status code 402, with default header values.
+/*ProcessPaymentPaymentRequired handles this case with default header values.
 
 Transaction declined by gateway
 */
 type ProcessPaymentPaymentRequired struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentPaymentRequired) Error() string {
@@ -155,11 +127,12 @@ func NewProcessPaymentNotFound() *ProcessPaymentNotFound {
 	return &ProcessPaymentNotFound{}
 }
 
-/* ProcessPaymentNotFound describes a response with status code 404, with default header values.
+/*ProcessPaymentNotFound handles this case with default header values.
 
 Account not found
 */
 type ProcessPaymentNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentNotFound) Error() string {
@@ -176,11 +149,12 @@ func NewProcessPaymentUnprocessableEntity() *ProcessPaymentUnprocessableEntity {
 	return &ProcessPaymentUnprocessableEntity{}
 }
 
-/* ProcessPaymentUnprocessableEntity describes a response with status code 422, with default header values.
+/*ProcessPaymentUnprocessableEntity handles this case with default header values.
 
 Payment is aborted by a control plugin
 */
 type ProcessPaymentUnprocessableEntity struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentUnprocessableEntity) Error() string {
@@ -197,11 +171,12 @@ func NewProcessPaymentBadGateway() *ProcessPaymentBadGateway {
 	return &ProcessPaymentBadGateway{}
 }
 
-/* ProcessPaymentBadGateway describes a response with status code 502, with default header values.
+/*ProcessPaymentBadGateway handles this case with default header values.
 
 Failed to submit payment transaction
 */
 type ProcessPaymentBadGateway struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentBadGateway) Error() string {
@@ -218,11 +193,12 @@ func NewProcessPaymentServiceUnavailable() *ProcessPaymentServiceUnavailable {
 	return &ProcessPaymentServiceUnavailable{}
 }
 
-/* ProcessPaymentServiceUnavailable describes a response with status code 503, with default header values.
+/*ProcessPaymentServiceUnavailable handles this case with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type ProcessPaymentServiceUnavailable struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentServiceUnavailable) Error() string {
@@ -239,11 +215,12 @@ func NewProcessPaymentGatewayTimeout() *ProcessPaymentGatewayTimeout {
 	return &ProcessPaymentGatewayTimeout{}
 }
 
-/* ProcessPaymentGatewayTimeout describes a response with status code 504, with default header values.
+/*ProcessPaymentGatewayTimeout handles this case with default header values.
 
 Payment operation timeout
 */
 type ProcessPaymentGatewayTimeout struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ProcessPaymentGatewayTimeout) Error() string {

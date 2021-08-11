@@ -7,9 +7,12 @@ package payment
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // VoidPaymentByExternalKeyReader is a Reader for the VoidPaymentByExternalKey structure.
@@ -20,50 +23,21 @@ type VoidPaymentByExternalKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *VoidPaymentByExternalKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 204:
 		result := NewVoidPaymentByExternalKeyNoContent()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 402:
-		result := NewVoidPaymentByExternalKeyPaymentRequired()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewVoidPaymentByExternalKeyNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 422:
-		result := NewVoidPaymentByExternalKeyUnprocessableEntity()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 502:
-		result := NewVoidPaymentByExternalKeyBadGateway()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 503:
-		result := NewVoidPaymentByExternalKeyServiceUnavailable()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 504:
-		result := NewVoidPaymentByExternalKeyGatewayTimeout()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -72,11 +46,12 @@ func NewVoidPaymentByExternalKeyNoContent() *VoidPaymentByExternalKeyNoContent {
 	return &VoidPaymentByExternalKeyNoContent{}
 }
 
-/* VoidPaymentByExternalKeyNoContent describes a response with status code 204, with default header values.
+/*VoidPaymentByExternalKeyNoContent handles this case with default header values.
 
 Successful operation
 */
 type VoidPaymentByExternalKeyNoContent struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentByExternalKeyNoContent) Error() string {
@@ -93,11 +68,12 @@ func NewVoidPaymentByExternalKeyPaymentRequired() *VoidPaymentByExternalKeyPayme
 	return &VoidPaymentByExternalKeyPaymentRequired{}
 }
 
-/* VoidPaymentByExternalKeyPaymentRequired describes a response with status code 402, with default header values.
+/*VoidPaymentByExternalKeyPaymentRequired handles this case with default header values.
 
 Transaction declined by gateway
 */
 type VoidPaymentByExternalKeyPaymentRequired struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentByExternalKeyPaymentRequired) Error() string {
@@ -114,11 +90,12 @@ func NewVoidPaymentByExternalKeyNotFound() *VoidPaymentByExternalKeyNotFound {
 	return &VoidPaymentByExternalKeyNotFound{}
 }
 
-/* VoidPaymentByExternalKeyNotFound describes a response with status code 404, with default header values.
+/*VoidPaymentByExternalKeyNotFound handles this case with default header values.
 
 Account or payment not found
 */
 type VoidPaymentByExternalKeyNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentByExternalKeyNotFound) Error() string {
@@ -135,11 +112,12 @@ func NewVoidPaymentByExternalKeyUnprocessableEntity() *VoidPaymentByExternalKeyU
 	return &VoidPaymentByExternalKeyUnprocessableEntity{}
 }
 
-/* VoidPaymentByExternalKeyUnprocessableEntity describes a response with status code 422, with default header values.
+/*VoidPaymentByExternalKeyUnprocessableEntity handles this case with default header values.
 
 Payment is aborted by a control plugin
 */
 type VoidPaymentByExternalKeyUnprocessableEntity struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentByExternalKeyUnprocessableEntity) Error() string {
@@ -156,11 +134,12 @@ func NewVoidPaymentByExternalKeyBadGateway() *VoidPaymentByExternalKeyBadGateway
 	return &VoidPaymentByExternalKeyBadGateway{}
 }
 
-/* VoidPaymentByExternalKeyBadGateway describes a response with status code 502, with default header values.
+/*VoidPaymentByExternalKeyBadGateway handles this case with default header values.
 
 Failed to submit payment transaction
 */
 type VoidPaymentByExternalKeyBadGateway struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentByExternalKeyBadGateway) Error() string {
@@ -177,11 +156,12 @@ func NewVoidPaymentByExternalKeyServiceUnavailable() *VoidPaymentByExternalKeySe
 	return &VoidPaymentByExternalKeyServiceUnavailable{}
 }
 
-/* VoidPaymentByExternalKeyServiceUnavailable describes a response with status code 503, with default header values.
+/*VoidPaymentByExternalKeyServiceUnavailable handles this case with default header values.
 
 Payment in unknown status, failed to receive gateway response
 */
 type VoidPaymentByExternalKeyServiceUnavailable struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentByExternalKeyServiceUnavailable) Error() string {
@@ -198,11 +178,12 @@ func NewVoidPaymentByExternalKeyGatewayTimeout() *VoidPaymentByExternalKeyGatewa
 	return &VoidPaymentByExternalKeyGatewayTimeout{}
 }
 
-/* VoidPaymentByExternalKeyGatewayTimeout describes a response with status code 504, with default header values.
+/*VoidPaymentByExternalKeyGatewayTimeout handles this case with default header values.
 
 Payment operation timeout
 */
 type VoidPaymentByExternalKeyGatewayTimeout struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidPaymentByExternalKeyGatewayTimeout) Error() string {

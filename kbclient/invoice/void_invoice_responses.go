@@ -7,9 +7,12 @@ package invoice
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // VoidInvoiceReader is a Reader for the VoidInvoice structure.
@@ -20,26 +23,21 @@ type VoidInvoiceReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *VoidInvoiceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 204:
 		result := NewVoidInvoiceNoContent()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewVoidInvoiceBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewVoidInvoiceNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -48,11 +46,12 @@ func NewVoidInvoiceNoContent() *VoidInvoiceNoContent {
 	return &VoidInvoiceNoContent{}
 }
 
-/* VoidInvoiceNoContent describes a response with status code 204, with default header values.
+/*VoidInvoiceNoContent handles this case with default header values.
 
 Successful operation
 */
 type VoidInvoiceNoContent struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidInvoiceNoContent) Error() string {
@@ -69,11 +68,12 @@ func NewVoidInvoiceBadRequest() *VoidInvoiceBadRequest {
 	return &VoidInvoiceBadRequest{}
 }
 
-/* VoidInvoiceBadRequest describes a response with status code 400, with default header values.
+/*VoidInvoiceBadRequest handles this case with default header values.
 
 Invalid invoice id supplied
 */
 type VoidInvoiceBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidInvoiceBadRequest) Error() string {
@@ -90,11 +90,12 @@ func NewVoidInvoiceNotFound() *VoidInvoiceNotFound {
 	return &VoidInvoiceNotFound{}
 }
 
-/* VoidInvoiceNotFound describes a response with status code 404, with default header values.
+/*VoidInvoiceNotFound handles this case with default header values.
 
 Invoice not found
 */
 type VoidInvoiceNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *VoidInvoiceNotFound) Error() string {

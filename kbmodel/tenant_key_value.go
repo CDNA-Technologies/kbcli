@@ -6,14 +6,12 @@ package kbmodel
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"context"
+	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // TenantKeyValue tenant key value
-//
 // swagger:model TenantKeyValue
 type TenantKeyValue struct {
 
@@ -26,11 +24,6 @@ type TenantKeyValue struct {
 
 // Validate validates this tenant key value
 func (m *TenantKeyValue) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// ContextValidate validates this tenant key value based on context it is used
-func (m *TenantKeyValue) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

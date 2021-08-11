@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetOverdueAccountReader is a Reader for the GetOverdueAccount structure.
@@ -23,26 +25,21 @@ type GetOverdueAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetOverdueAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetOverdueAccountOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewGetOverdueAccountBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewGetOverdueAccountNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -51,17 +48,20 @@ func NewGetOverdueAccountOK() *GetOverdueAccountOK {
 	return &GetOverdueAccountOK{}
 }
 
-/* GetOverdueAccountOK describes a response with status code 200, with default header values.
+/*GetOverdueAccountOK handles this case with default header values.
 
 successful operation
 */
 type GetOverdueAccountOK struct {
 	Payload *kbmodel.OverdueState
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetOverdueAccountOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/accounts/{accountId}/overdue][%d] getOverdueAccountOK  %+v", 200, o.Payload)
 }
+
 func (o *GetOverdueAccountOK) GetPayload() *kbmodel.OverdueState {
 	return o.Payload
 }
@@ -83,11 +83,12 @@ func NewGetOverdueAccountBadRequest() *GetOverdueAccountBadRequest {
 	return &GetOverdueAccountBadRequest{}
 }
 
-/* GetOverdueAccountBadRequest describes a response with status code 400, with default header values.
+/*GetOverdueAccountBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type GetOverdueAccountBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetOverdueAccountBadRequest) Error() string {
@@ -104,11 +105,12 @@ func NewGetOverdueAccountNotFound() *GetOverdueAccountNotFound {
 	return &GetOverdueAccountNotFound{}
 }
 
-/* GetOverdueAccountNotFound describes a response with status code 404, with default header values.
+/*GetOverdueAccountNotFound handles this case with default header values.
 
 Account not found
 */
 type GetOverdueAccountNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetOverdueAccountNotFound) Error() string {

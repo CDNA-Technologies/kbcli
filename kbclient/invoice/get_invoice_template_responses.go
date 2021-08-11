@@ -10,7 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // GetInvoiceTemplateReader is a Reader for the GetInvoiceTemplate structure.
@@ -21,20 +23,21 @@ type GetInvoiceTemplateReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetInvoiceTemplateReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetInvoiceTemplateOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 404:
-		result := NewGetInvoiceTemplateNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
+
+	default:
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
 			return nil, err
 		}
-		return nil, result
-	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, errorResult
 	}
 }
 
@@ -43,17 +46,20 @@ func NewGetInvoiceTemplateOK() *GetInvoiceTemplateOK {
 	return &GetInvoiceTemplateOK{}
 }
 
-/* GetInvoiceTemplateOK describes a response with status code 200, with default header values.
+/*GetInvoiceTemplateOK handles this case with default header values.
 
 successful operation
 */
 type GetInvoiceTemplateOK struct {
 	Payload string
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoiceTemplateOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/invoices/template][%d] getInvoiceTemplateOK  %+v", 200, o.Payload)
 }
+
 func (o *GetInvoiceTemplateOK) GetPayload() string {
 	return o.Payload
 }
@@ -73,11 +79,12 @@ func NewGetInvoiceTemplateNotFound() *GetInvoiceTemplateNotFound {
 	return &GetInvoiceTemplateNotFound{}
 }
 
-/* GetInvoiceTemplateNotFound describes a response with status code 404, with default header values.
+/*GetInvoiceTemplateNotFound handles this case with default header values.
 
 Template not found
 */
 type GetInvoiceTemplateNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoiceTemplateNotFound) Error() string {

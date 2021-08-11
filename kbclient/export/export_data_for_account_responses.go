@@ -7,9 +7,12 @@ package export
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // ExportDataForAccountReader is a Reader for the ExportDataForAccount structure.
@@ -20,26 +23,21 @@ type ExportDataForAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ExportDataForAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewExportDataForAccountOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewExportDataForAccountBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewExportDataForAccountNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -48,11 +46,12 @@ func NewExportDataForAccountOK() *ExportDataForAccountOK {
 	return &ExportDataForAccountOK{}
 }
 
-/* ExportDataForAccountOK describes a response with status code 200, with default header values.
+/*ExportDataForAccountOK handles this case with default header values.
 
 Success
 */
 type ExportDataForAccountOK struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ExportDataForAccountOK) Error() string {
@@ -69,11 +68,12 @@ func NewExportDataForAccountBadRequest() *ExportDataForAccountBadRequest {
 	return &ExportDataForAccountBadRequest{}
 }
 
-/* ExportDataForAccountBadRequest describes a response with status code 400, with default header values.
+/*ExportDataForAccountBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type ExportDataForAccountBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ExportDataForAccountBadRequest) Error() string {
@@ -90,11 +90,12 @@ func NewExportDataForAccountNotFound() *ExportDataForAccountNotFound {
 	return &ExportDataForAccountNotFound{}
 }
 
-/* ExportDataForAccountNotFound describes a response with status code 404, with default header values.
+/*ExportDataForAccountNotFound handles this case with default header values.
 
 Account not found
 */
 type ExportDataForAccountNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *ExportDataForAccountNotFound) Error() string {

@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // CreateSubscriptionReader is a Reader for the CreateSubscription structure.
@@ -23,14 +25,20 @@ type CreateSubscriptionReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateSubscriptionReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewCreateSubscriptionCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -39,17 +47,20 @@ func NewCreateSubscriptionCreated() *CreateSubscriptionCreated {
 	return &CreateSubscriptionCreated{}
 }
 
-/* CreateSubscriptionCreated describes a response with status code 201, with default header values.
+/*CreateSubscriptionCreated handles this case with default header values.
 
 Subscription created successfully
 */
 type CreateSubscriptionCreated struct {
 	Payload *kbmodel.Subscription
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateSubscriptionCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/subscriptions][%d] createSubscriptionCreated  %+v", 201, o.Payload)
 }
+
 func (o *CreateSubscriptionCreated) GetPayload() *kbmodel.Subscription {
 	return o.Payload
 }

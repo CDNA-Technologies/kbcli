@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // CreateFutureInvoiceReader is a Reader for the CreateFutureInvoice structure.
@@ -23,20 +25,21 @@ type CreateFutureInvoiceReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateFutureInvoiceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewCreateFutureInvoiceCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewCreateFutureInvoiceBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
+
+	default:
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
 			return nil, err
 		}
-		return nil, result
-	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, errorResult
 	}
 }
 
@@ -45,17 +48,20 @@ func NewCreateFutureInvoiceCreated() *CreateFutureInvoiceCreated {
 	return &CreateFutureInvoiceCreated{}
 }
 
-/* CreateFutureInvoiceCreated describes a response with status code 201, with default header values.
+/*CreateFutureInvoiceCreated handles this case with default header values.
 
 Created invoice successfully
 */
 type CreateFutureInvoiceCreated struct {
 	Payload *kbmodel.Invoice
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateFutureInvoiceCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/invoices][%d] createFutureInvoiceCreated  %+v", 201, o.Payload)
 }
+
 func (o *CreateFutureInvoiceCreated) GetPayload() *kbmodel.Invoice {
 	return o.Payload
 }
@@ -77,11 +83,12 @@ func NewCreateFutureInvoiceBadRequest() *CreateFutureInvoiceBadRequest {
 	return &CreateFutureInvoiceBadRequest{}
 }
 
-/* CreateFutureInvoiceBadRequest describes a response with status code 400, with default header values.
+/*CreateFutureInvoiceBadRequest handles this case with default header values.
 
 Invalid account id or target datetime supplied
 */
 type CreateFutureInvoiceBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *CreateFutureInvoiceBadRequest) Error() string {

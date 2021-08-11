@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetInvoicesForAccountReader is a Reader for the GetInvoicesForAccount structure.
@@ -23,26 +25,21 @@ type GetInvoicesForAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetInvoicesForAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetInvoicesForAccountOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewGetInvoicesForAccountBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 404:
-		result := NewGetInvoicesForAccountNotFound()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -51,17 +48,20 @@ func NewGetInvoicesForAccountOK() *GetInvoicesForAccountOK {
 	return &GetInvoicesForAccountOK{}
 }
 
-/* GetInvoicesForAccountOK describes a response with status code 200, with default header values.
+/*GetInvoicesForAccountOK handles this case with default header values.
 
 successful operation
 */
 type GetInvoicesForAccountOK struct {
 	Payload []*kbmodel.Invoice
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoicesForAccountOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/accounts/{accountId}/invoices][%d] getInvoicesForAccountOK  %+v", 200, o.Payload)
 }
+
 func (o *GetInvoicesForAccountOK) GetPayload() []*kbmodel.Invoice {
 	return o.Payload
 }
@@ -81,11 +81,12 @@ func NewGetInvoicesForAccountBadRequest() *GetInvoicesForAccountBadRequest {
 	return &GetInvoicesForAccountBadRequest{}
 }
 
-/* GetInvoicesForAccountBadRequest describes a response with status code 400, with default header values.
+/*GetInvoicesForAccountBadRequest handles this case with default header values.
 
 Invalid account id supplied
 */
 type GetInvoicesForAccountBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoicesForAccountBadRequest) Error() string {
@@ -102,11 +103,12 @@ func NewGetInvoicesForAccountNotFound() *GetInvoicesForAccountNotFound {
 	return &GetInvoicesForAccountNotFound{}
 }
 
-/* GetInvoicesForAccountNotFound describes a response with status code 404, with default header values.
+/*GetInvoicesForAccountNotFound handles this case with default header values.
 
 Account not found
 */
 type GetInvoicesForAccountNotFound struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetInvoicesForAccountNotFound) Error() string {

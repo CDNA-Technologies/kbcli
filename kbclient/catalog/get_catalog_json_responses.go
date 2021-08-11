@@ -10,9 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	strfmt "github.com/go-openapi/strfmt"
+
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // GetCatalogJSONReader is a Reader for the GetCatalogJSON structure.
@@ -23,14 +25,20 @@ type GetCatalogJSONReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetCatalogJSONReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
+
 	case 200:
 		result := NewGetCatalogJSONOK()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
+			return nil, err
+		}
+		return nil, errorResult
 	}
 }
 
@@ -39,17 +47,20 @@ func NewGetCatalogJSONOK() *GetCatalogJSONOK {
 	return &GetCatalogJSONOK{}
 }
 
-/* GetCatalogJSONOK describes a response with status code 200, with default header values.
+/*GetCatalogJSONOK handles this case with default header values.
 
 successful operation
 */
 type GetCatalogJSONOK struct {
 	Payload []*kbmodel.Catalog
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *GetCatalogJSONOK) Error() string {
 	return fmt.Sprintf("[GET /1.0/kb/catalog][%d] getCatalogJsonOK  %+v", 200, o.Payload)
 }
+
 func (o *GetCatalogJSONOK) GetPayload() []*kbmodel.Catalog {
 	return o.Payload
 }

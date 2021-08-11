@@ -10,7 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	"github.com/killbill/kbcli/v2/kbcommon"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // UploadOverdueConfigXMLReader is a Reader for the UploadOverdueConfigXML structure.
@@ -21,20 +23,21 @@ type UploadOverdueConfigXMLReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *UploadOverdueConfigXMLReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
+
+	case 201, 200:
 		result := NewUploadOverdueConfigXMLCreated()
+		result.HttpResponse = response
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewUploadOverdueConfigXMLBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
+
+	default:
+		errorResult := kbcommon.NewKillbillError(response.Code())
+		if err := consumer.Consume(response.Body(), &errorResult); err != nil && err != io.EOF {
 			return nil, err
 		}
-		return nil, result
-	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, errorResult
 	}
 }
 
@@ -43,17 +46,20 @@ func NewUploadOverdueConfigXMLCreated() *UploadOverdueConfigXMLCreated {
 	return &UploadOverdueConfigXMLCreated{}
 }
 
-/* UploadOverdueConfigXMLCreated describes a response with status code 201, with default header values.
+/*UploadOverdueConfigXMLCreated handles this case with default header values.
 
 Successfully uploaded overdue config
 */
 type UploadOverdueConfigXMLCreated struct {
 	Payload string
+
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *UploadOverdueConfigXMLCreated) Error() string {
 	return fmt.Sprintf("[POST /1.0/kb/overdue/xml][%d] uploadOverdueConfigXmlCreated  %+v", 201, o.Payload)
 }
+
 func (o *UploadOverdueConfigXMLCreated) GetPayload() string {
 	return o.Payload
 }
@@ -73,11 +79,12 @@ func NewUploadOverdueConfigXMLBadRequest() *UploadOverdueConfigXMLBadRequest {
 	return &UploadOverdueConfigXMLBadRequest{}
 }
 
-/* UploadOverdueConfigXMLBadRequest describes a response with status code 400, with default header values.
+/*UploadOverdueConfigXMLBadRequest handles this case with default header values.
 
 Invalid node command supplied
 */
 type UploadOverdueConfigXMLBadRequest struct {
+	HttpResponse runtime.ClientResponse
 }
 
 func (o *UploadOverdueConfigXMLBadRequest) Error() string {

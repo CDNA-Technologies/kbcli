@@ -53,26 +53,36 @@ type Client struct {
 type ISubscription interface {
 	/*
 		AddSubscriptionBlockingState blocks a subscription
+
+		resource description
 	*/
 	AddSubscriptionBlockingState(ctx context.Context, params *AddSubscriptionBlockingStateParams) (*AddSubscriptionBlockingStateCreated, error)
 
 	/*
 		CancelSubscriptionPlan cancels an entitlement plan
+
+		resource description
 	*/
 	CancelSubscriptionPlan(ctx context.Context, params *CancelSubscriptionPlanParams) (*CancelSubscriptionPlanNoContent, error)
 
 	/*
 		ChangeSubscriptionPlan changes entitlement plan
+
+		resource description
 	*/
 	ChangeSubscriptionPlan(ctx context.Context, params *ChangeSubscriptionPlanParams) (*ChangeSubscriptionPlanNoContent, error)
 
 	/*
 		CreateSubscription creates an subscription
+
+		resource description
 	*/
 	CreateSubscription(ctx context.Context, params *CreateSubscriptionParams) (*CreateSubscriptionCreated, error)
 
 	/*
 		CreateSubscriptionCustomFields adds custom fields to subscription
+
+		resource description
 	*/
 	CreateSubscriptionCustomFields(ctx context.Context, params *CreateSubscriptionCustomFieldsParams) (*CreateSubscriptionCustomFieldsCreated, error)
 
@@ -83,77 +93,107 @@ type ISubscription interface {
 
 	/*
 		CreateSubscriptionWithAddOns creates an entitlement with add on products
+
+		resource description
 	*/
 	CreateSubscriptionWithAddOns(ctx context.Context, params *CreateSubscriptionWithAddOnsParams) (*CreateSubscriptionWithAddOnsCreated, error)
 
 	/*
 		CreateSubscriptionsWithAddOns creates multiple entitlements with add on products
+
+		resource description
 	*/
 	CreateSubscriptionsWithAddOns(ctx context.Context, params *CreateSubscriptionsWithAddOnsParams) (*CreateSubscriptionsWithAddOnsCreated, error)
 
 	/*
 		DeleteSubscriptionCustomFields removes custom fields from subscription
+
+		resource description
 	*/
 	DeleteSubscriptionCustomFields(ctx context.Context, params *DeleteSubscriptionCustomFieldsParams) (*DeleteSubscriptionCustomFieldsNoContent, error)
 
 	/*
 		DeleteSubscriptionTags removes tags from subscription
+
+		resource description
 	*/
 	DeleteSubscriptionTags(ctx context.Context, params *DeleteSubscriptionTagsParams) (*DeleteSubscriptionTagsNoContent, error)
 
 	/*
 		GetSubscription retrieves a subscription by id
+
+		resource description
 	*/
 	GetSubscription(ctx context.Context, params *GetSubscriptionParams) (*GetSubscriptionOK, error)
 
 	/*
 		GetSubscriptionAuditLogsWithHistory retrieves subscription audit logs with history by id
+
+		resource description
 	*/
 	GetSubscriptionAuditLogsWithHistory(ctx context.Context, params *GetSubscriptionAuditLogsWithHistoryParams) (*GetSubscriptionAuditLogsWithHistoryOK, error)
 
 	/*
 		GetSubscriptionByKey retrieves a subscription by external key
+
+		resource description
 	*/
 	GetSubscriptionByKey(ctx context.Context, params *GetSubscriptionByKeyParams) (*GetSubscriptionByKeyOK, error)
 
 	/*
 		GetSubscriptionCustomFields retrieves subscription custom fields
+
+		resource description
 	*/
 	GetSubscriptionCustomFields(ctx context.Context, params *GetSubscriptionCustomFieldsParams) (*GetSubscriptionCustomFieldsOK, error)
 
 	/*
 		GetSubscriptionEventAuditLogsWithHistory retrieves subscription event audit logs with history by id
+
+		resource description
 	*/
 	GetSubscriptionEventAuditLogsWithHistory(ctx context.Context, params *GetSubscriptionEventAuditLogsWithHistoryParams) (*GetSubscriptionEventAuditLogsWithHistoryOK, error)
 
 	/*
 		GetSubscriptionTags retrieves subscription tags
+
+		resource description
 	*/
 	GetSubscriptionTags(ctx context.Context, params *GetSubscriptionTagsParams) (*GetSubscriptionTagsOK, error)
 
 	/*
 		ModifySubscriptionCustomFields modifies custom fields to subscription
+
+		resource description
 	*/
 	ModifySubscriptionCustomFields(ctx context.Context, params *ModifySubscriptionCustomFieldsParams) (*ModifySubscriptionCustomFieldsNoContent, error)
 
 	/*
 		UncancelSubscriptionPlan uns cancel an entitlement
+
+		resource description
 	*/
 	UncancelSubscriptionPlan(ctx context.Context, params *UncancelSubscriptionPlanParams) (*UncancelSubscriptionPlanNoContent, error)
 
 	/*
 		UndoChangeSubscriptionPlan undos a pending change plan on an entitlement
+
+		resource description
 	*/
 	UndoChangeSubscriptionPlan(ctx context.Context, params *UndoChangeSubscriptionPlanParams) (*UndoChangeSubscriptionPlanNoContent, error)
 
 	/*
 		UpdateSubscriptionBCD updates the b c d associated to a subscription
+
+		resource description
 	*/
 	UpdateSubscriptionBCD(ctx context.Context, params *UpdateSubscriptionBCDParams) (*UpdateSubscriptionBCDNoContent, error)
 }
 
 /*
 AddSubscriptionBlockingState blocks a subscription
+
+resource description
 */
 func (a *Client) AddSubscriptionBlockingState(ctx context.Context, params *AddSubscriptionBlockingStateParams) (*AddSubscriptionBlockingStateCreated, error) {
 	// TODO: Validate the params before sending
@@ -228,6 +268,8 @@ func (a *Client) AddSubscriptionBlockingState(ctx context.Context, params *AddSu
 
 /*
 CancelSubscriptionPlan cancels an entitlement plan
+
+resource description
 */
 func (a *Client) CancelSubscriptionPlan(ctx context.Context, params *CancelSubscriptionPlanParams) (*CancelSubscriptionPlanNoContent, error) {
 	// TODO: Validate the params before sending
@@ -284,6 +326,8 @@ func (a *Client) CancelSubscriptionPlan(ctx context.Context, params *CancelSubsc
 
 /*
 ChangeSubscriptionPlan changes entitlement plan
+
+resource description
 */
 func (a *Client) ChangeSubscriptionPlan(ctx context.Context, params *ChangeSubscriptionPlanParams) (*ChangeSubscriptionPlanNoContent, error) {
 	// TODO: Validate the params before sending
@@ -340,6 +384,8 @@ func (a *Client) ChangeSubscriptionPlan(ctx context.Context, params *ChangeSubsc
 
 /*
 CreateSubscription creates an subscription
+
+resource description
 */
 func (a *Client) CreateSubscription(ctx context.Context, params *CreateSubscriptionParams) (*CreateSubscriptionCreated, error) {
 	// TODO: Validate the params before sending
@@ -414,6 +460,8 @@ func (a *Client) CreateSubscription(ctx context.Context, params *CreateSubscript
 
 /*
 CreateSubscriptionCustomFields adds custom fields to subscription
+
+resource description
 */
 func (a *Client) CreateSubscriptionCustomFields(ctx context.Context, params *CreateSubscriptionCustomFieldsParams) (*CreateSubscriptionCustomFieldsCreated, error) {
 	// TODO: Validate the params before sending
@@ -562,6 +610,8 @@ func (a *Client) CreateSubscriptionTags(ctx context.Context, params *CreateSubsc
 
 /*
 CreateSubscriptionWithAddOns creates an entitlement with add on products
+
+resource description
 */
 func (a *Client) CreateSubscriptionWithAddOns(ctx context.Context, params *CreateSubscriptionWithAddOnsParams) (*CreateSubscriptionWithAddOnsCreated, error) {
 	// TODO: Validate the params before sending
@@ -636,6 +686,8 @@ func (a *Client) CreateSubscriptionWithAddOns(ctx context.Context, params *Creat
 
 /*
 CreateSubscriptionsWithAddOns creates multiple entitlements with add on products
+
+resource description
 */
 func (a *Client) CreateSubscriptionsWithAddOns(ctx context.Context, params *CreateSubscriptionsWithAddOnsParams) (*CreateSubscriptionsWithAddOnsCreated, error) {
 	// TODO: Validate the params before sending
@@ -710,6 +762,8 @@ func (a *Client) CreateSubscriptionsWithAddOns(ctx context.Context, params *Crea
 
 /*
 DeleteSubscriptionCustomFields removes custom fields from subscription
+
+resource description
 */
 func (a *Client) DeleteSubscriptionCustomFields(ctx context.Context, params *DeleteSubscriptionCustomFieldsParams) (*DeleteSubscriptionCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -766,6 +820,8 @@ func (a *Client) DeleteSubscriptionCustomFields(ctx context.Context, params *Del
 
 /*
 DeleteSubscriptionTags removes tags from subscription
+
+resource description
 */
 func (a *Client) DeleteSubscriptionTags(ctx context.Context, params *DeleteSubscriptionTagsParams) (*DeleteSubscriptionTagsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -822,6 +878,8 @@ func (a *Client) DeleteSubscriptionTags(ctx context.Context, params *DeleteSubsc
 
 /*
 GetSubscription retrieves a subscription by id
+
+resource description
 */
 func (a *Client) GetSubscription(ctx context.Context, params *GetSubscriptionParams) (*GetSubscriptionOK, error) {
 	// TODO: Validate the params before sending
@@ -866,6 +924,8 @@ func (a *Client) GetSubscription(ctx context.Context, params *GetSubscriptionPar
 
 /*
 GetSubscriptionAuditLogsWithHistory retrieves subscription audit logs with history by id
+
+resource description
 */
 func (a *Client) GetSubscriptionAuditLogsWithHistory(ctx context.Context, params *GetSubscriptionAuditLogsWithHistoryParams) (*GetSubscriptionAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -910,6 +970,8 @@ func (a *Client) GetSubscriptionAuditLogsWithHistory(ctx context.Context, params
 
 /*
 GetSubscriptionByKey retrieves a subscription by external key
+
+resource description
 */
 func (a *Client) GetSubscriptionByKey(ctx context.Context, params *GetSubscriptionByKeyParams) (*GetSubscriptionByKeyOK, error) {
 	// TODO: Validate the params before sending
@@ -954,6 +1016,8 @@ func (a *Client) GetSubscriptionByKey(ctx context.Context, params *GetSubscripti
 
 /*
 GetSubscriptionCustomFields retrieves subscription custom fields
+
+resource description
 */
 func (a *Client) GetSubscriptionCustomFields(ctx context.Context, params *GetSubscriptionCustomFieldsParams) (*GetSubscriptionCustomFieldsOK, error) {
 	// TODO: Validate the params before sending
@@ -998,6 +1062,8 @@ func (a *Client) GetSubscriptionCustomFields(ctx context.Context, params *GetSub
 
 /*
 GetSubscriptionEventAuditLogsWithHistory retrieves subscription event audit logs with history by id
+
+resource description
 */
 func (a *Client) GetSubscriptionEventAuditLogsWithHistory(ctx context.Context, params *GetSubscriptionEventAuditLogsWithHistoryParams) (*GetSubscriptionEventAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -1042,6 +1108,8 @@ func (a *Client) GetSubscriptionEventAuditLogsWithHistory(ctx context.Context, p
 
 /*
 GetSubscriptionTags retrieves subscription tags
+
+resource description
 */
 func (a *Client) GetSubscriptionTags(ctx context.Context, params *GetSubscriptionTagsParams) (*GetSubscriptionTagsOK, error) {
 	// TODO: Validate the params before sending
@@ -1086,6 +1154,8 @@ func (a *Client) GetSubscriptionTags(ctx context.Context, params *GetSubscriptio
 
 /*
 ModifySubscriptionCustomFields modifies custom fields to subscription
+
+resource description
 */
 func (a *Client) ModifySubscriptionCustomFields(ctx context.Context, params *ModifySubscriptionCustomFieldsParams) (*ModifySubscriptionCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1142,6 +1212,8 @@ func (a *Client) ModifySubscriptionCustomFields(ctx context.Context, params *Mod
 
 /*
 UncancelSubscriptionPlan uns cancel an entitlement
+
+resource description
 */
 func (a *Client) UncancelSubscriptionPlan(ctx context.Context, params *UncancelSubscriptionPlanParams) (*UncancelSubscriptionPlanNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1198,6 +1270,8 @@ func (a *Client) UncancelSubscriptionPlan(ctx context.Context, params *UncancelS
 
 /*
 UndoChangeSubscriptionPlan undos a pending change plan on an entitlement
+
+resource description
 */
 func (a *Client) UndoChangeSubscriptionPlan(ctx context.Context, params *UndoChangeSubscriptionPlanParams) (*UndoChangeSubscriptionPlanNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1254,6 +1328,8 @@ func (a *Client) UndoChangeSubscriptionPlan(ctx context.Context, params *UndoCha
 
 /*
 UpdateSubscriptionBCD updates the b c d associated to a subscription
+
+resource description
 */
 func (a *Client) UpdateSubscriptionBCD(ctx context.Context, params *UpdateSubscriptionBCDParams) (*UpdateSubscriptionBCDNoContent, error) {
 	// TODO: Validate the params before sending

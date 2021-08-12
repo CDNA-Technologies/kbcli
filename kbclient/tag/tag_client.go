@@ -52,22 +52,30 @@ type Client struct {
 type ITag interface {
 	/*
 		GetTagAuditLogsWithHistory retrieves tag audit logs with history by id
+
+		resource description
 	*/
 	GetTagAuditLogsWithHistory(ctx context.Context, params *GetTagAuditLogsWithHistoryParams) (*GetTagAuditLogsWithHistoryOK, error)
 
 	/*
 		GetTags lists tags
+
+		resource description
 	*/
 	GetTags(ctx context.Context, params *GetTagsParams) (*GetTagsOK, error)
 
 	/*
 		SearchTags searches tags
+
+		resource description
 	*/
 	SearchTags(ctx context.Context, params *SearchTagsParams) (*SearchTagsOK, error)
 }
 
 /*
 GetTagAuditLogsWithHistory retrieves tag audit logs with history by id
+
+resource description
 */
 func (a *Client) GetTagAuditLogsWithHistory(ctx context.Context, params *GetTagAuditLogsWithHistoryParams) (*GetTagAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -112,6 +120,8 @@ func (a *Client) GetTagAuditLogsWithHistory(ctx context.Context, params *GetTagA
 
 /*
 GetTags lists tags
+
+resource description
 */
 func (a *Client) GetTags(ctx context.Context, params *GetTagsParams) (*GetTagsOK, error) {
 	// TODO: Validate the params before sending
@@ -156,6 +166,8 @@ func (a *Client) GetTags(ctx context.Context, params *GetTagsParams) (*GetTagsOK
 
 /*
 SearchTags searches tags
+
+resource description
 */
 func (a *Client) SearchTags(ctx context.Context, params *SearchTagsParams) (*SearchTagsOK, error) {
 	// TODO: Validate the params before sending

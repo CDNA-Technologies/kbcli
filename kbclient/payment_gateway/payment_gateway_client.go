@@ -52,11 +52,15 @@ type Client struct {
 type IPaymentGateway interface {
 	/*
 		BuildComboFormDescriptor combos API to generate form data to redirect the customer to the gateway
+
+		resource description
 	*/
 	BuildComboFormDescriptor(ctx context.Context, params *BuildComboFormDescriptorParams) (*BuildComboFormDescriptorOK, error)
 
 	/*
 		BuildFormDescriptor generates form data to redirect the customer to the gateway
+
+		resource description
 	*/
 	BuildFormDescriptor(ctx context.Context, params *BuildFormDescriptorParams) (*BuildFormDescriptorOK, error)
 
@@ -70,6 +74,8 @@ type IPaymentGateway interface {
 
 /*
 BuildComboFormDescriptor combos API to generate form data to redirect the customer to the gateway
+
+resource description
 */
 func (a *Client) BuildComboFormDescriptor(ctx context.Context, params *BuildComboFormDescriptorParams) (*BuildComboFormDescriptorOK, error) {
 	// TODO: Validate the params before sending
@@ -126,6 +132,8 @@ func (a *Client) BuildComboFormDescriptor(ctx context.Context, params *BuildComb
 
 /*
 BuildFormDescriptor generates form data to redirect the customer to the gateway
+
+resource description
 */
 func (a *Client) BuildFormDescriptor(ctx context.Context, params *BuildFormDescriptorParams) (*BuildFormDescriptorOK, error) {
 	// TODO: Validate the params before sending

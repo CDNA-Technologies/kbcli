@@ -52,47 +52,65 @@ type Client struct {
 type IAdmin interface {
 	/*
 		GetQueueEntries gets queues entries
+
+		resource description
 	*/
 	GetQueueEntries(ctx context.Context, params *GetQueueEntriesParams) (*GetQueueEntriesOK, error)
 
 	/*
 		InvalidatesCache invalidates the given cache if specified otherwise invalidates all caches
+
+		resource description
 	*/
 	InvalidatesCache(ctx context.Context, params *InvalidatesCacheParams) (*InvalidatesCacheNoContent, error)
 
 	/*
 		InvalidatesCacheByAccount invalidates caches per account level
+
+		resource description
 	*/
 	InvalidatesCacheByAccount(ctx context.Context, params *InvalidatesCacheByAccountParams) (*InvalidatesCacheByAccountNoContent, error)
 
 	/*
 		InvalidatesCacheByTenant invalidates caches per tenant level
+
+		resource description
 	*/
 	InvalidatesCacheByTenant(ctx context.Context, params *InvalidatesCacheByTenantParams) (*InvalidatesCacheByTenantNoContent, error)
 
 	/*
 		PutInRotation puts the host back into rotation
+
+		resource description
 	*/
 	PutInRotation(ctx context.Context, params *PutInRotationParams) (*PutInRotationNoContent, error)
 
 	/*
 		PutOutOfRotation puts the host out of rotation
+
+		resource description
 	*/
 	PutOutOfRotation(ctx context.Context, params *PutOutOfRotationParams) (*PutOutOfRotationNoContent, error)
 
 	/*
 		TriggerInvoiceGenerationForParkedAccounts triggers an invoice generation for all parked accounts
+
+		resource description
 	*/
 	TriggerInvoiceGenerationForParkedAccounts(ctx context.Context, params *TriggerInvoiceGenerationForParkedAccountsParams) (*TriggerInvoiceGenerationForParkedAccountsOK, error)
 
 	/*
 		UpdatePaymentTransactionState updates existing payment transaction and associated payment state
+
+		resource description
 	*/
 	UpdatePaymentTransactionState(ctx context.Context, params *UpdatePaymentTransactionStateParams) (*UpdatePaymentTransactionStateNoContent, error)
 }
 
 /*
 GetQueueEntries gets queues entries
+
+resource description
 */
 func (a *Client) GetQueueEntries(ctx context.Context, params *GetQueueEntriesParams) (*GetQueueEntriesOK, error) {
 	// TODO: Validate the params before sending
@@ -137,6 +155,8 @@ func (a *Client) GetQueueEntries(ctx context.Context, params *GetQueueEntriesPar
 
 /*
 InvalidatesCache invalidates the given cache if specified otherwise invalidates all caches
+
+resource description
 */
 func (a *Client) InvalidatesCache(ctx context.Context, params *InvalidatesCacheParams) (*InvalidatesCacheNoContent, error) {
 	// TODO: Validate the params before sending
@@ -181,6 +201,8 @@ func (a *Client) InvalidatesCache(ctx context.Context, params *InvalidatesCacheP
 
 /*
 InvalidatesCacheByAccount invalidates caches per account level
+
+resource description
 */
 func (a *Client) InvalidatesCacheByAccount(ctx context.Context, params *InvalidatesCacheByAccountParams) (*InvalidatesCacheByAccountNoContent, error) {
 	// TODO: Validate the params before sending
@@ -225,6 +247,8 @@ func (a *Client) InvalidatesCacheByAccount(ctx context.Context, params *Invalida
 
 /*
 InvalidatesCacheByTenant invalidates caches per tenant level
+
+resource description
 */
 func (a *Client) InvalidatesCacheByTenant(ctx context.Context, params *InvalidatesCacheByTenantParams) (*InvalidatesCacheByTenantNoContent, error) {
 	// TODO: Validate the params before sending
@@ -269,6 +293,8 @@ func (a *Client) InvalidatesCacheByTenant(ctx context.Context, params *Invalidat
 
 /*
 PutInRotation puts the host back into rotation
+
+resource description
 */
 func (a *Client) PutInRotation(ctx context.Context, params *PutInRotationParams) (*PutInRotationNoContent, error) {
 	// TODO: Validate the params before sending
@@ -313,6 +339,8 @@ func (a *Client) PutInRotation(ctx context.Context, params *PutInRotationParams)
 
 /*
 PutOutOfRotation puts the host out of rotation
+
+resource description
 */
 func (a *Client) PutOutOfRotation(ctx context.Context, params *PutOutOfRotationParams) (*PutOutOfRotationNoContent, error) {
 	// TODO: Validate the params before sending
@@ -357,6 +385,8 @@ func (a *Client) PutOutOfRotation(ctx context.Context, params *PutOutOfRotationP
 
 /*
 TriggerInvoiceGenerationForParkedAccounts triggers an invoice generation for all parked accounts
+
+resource description
 */
 func (a *Client) TriggerInvoiceGenerationForParkedAccounts(ctx context.Context, params *TriggerInvoiceGenerationForParkedAccountsParams) (*TriggerInvoiceGenerationForParkedAccountsOK, error) {
 	// TODO: Validate the params before sending
@@ -413,6 +443,8 @@ func (a *Client) TriggerInvoiceGenerationForParkedAccounts(ctx context.Context, 
 
 /*
 UpdatePaymentTransactionState updates existing payment transaction and associated payment state
+
+resource description
 */
 func (a *Client) UpdatePaymentTransactionState(ctx context.Context, params *UpdatePaymentTransactionStateParams) (*UpdatePaymentTransactionStateNoContent, error) {
 	// TODO: Validate the params before sending

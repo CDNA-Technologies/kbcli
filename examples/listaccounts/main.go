@@ -14,13 +14,13 @@ import (
 
 // NewClient creates new kill bill client
 func NewClient() *kbclient.KillBill {
-	trp := httptransport.New("127.0.0.1:8080", "", nil)
+	trp := httptransport.New("arise-dev-killbill.gonuclei.com", "", []string{"https"})
 	// Add text/xml producer which is not handled by openapi runtime.
 	trp.Producers["text/xml"] = runtime.TextProducer()
 	// Set this to true to dump http messages
 	trp.Debug = false
-	apiKey := "bob"
-	apiSecret := "lazar"
+	apiKey := "golang-integration-subscription2"
+	apiSecret := "golang-integration-subscription2"
 	authWriter := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
 		encoded := base64.StdEncoding.EncodeToString([]byte("admin" /*username*/ + ":" + "password" /**password*/))
 		if err := r.SetHeaderParam("Authorization", "Basic "+encoded); err != nil {

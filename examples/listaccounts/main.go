@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 
@@ -18,12 +19,6 @@ func NewClient() *kbclient.KillBill {
 	trp.Producers["text/xml"] = runtime.TextProducer()
 	// Set this to true to dump http messages
 	trp.Debug = false
-	client := kbclient.New(trp, strfmt.Default)
-	return client
-}
-
-func main() {
-	c := NewClient()
 	apiKey := "bob"
 	apiSecret := "lazar"
 	authWriter := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
@@ -39,7 +34,14 @@ func main() {
 		}
 		return nil
 	})
-	resp, err := c.Account.GetAccounts(&account.GetAccountsParams{}, authWriter)
+	client := kbclient.New(trp, strfmt.Default, authWriter, kbclient.KillbillDefaults{})
+	return client
+}
+
+func main() {
+	c := NewClient()
+
+	resp, err := c.Account.GetAccounts(context.Background(), &account.GetAccountsParams{})
 	if err != nil {
 		panic(err)
 	}

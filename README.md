@@ -17,7 +17,7 @@ kill bill.
 
 ### Install
 ```bash
-go get -u github.com/killbill/kbcli/v2
+go get -u github.com/killbill/kbcli/v3
 ```
 
 ### Creating new client

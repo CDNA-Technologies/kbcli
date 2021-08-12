@@ -10,11 +10,11 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v3/kbcommon"
+	"github.com/CDNA-Technologies/kbcli/v3/kbcommon"
 
-	"github.com/go-openapi/strfmt"
+	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/CDNA-Technologies/kbcli/v3/kbmodel"
+	kbmodel "github.com/CDNA-Technologies/kbcli/v3/kbmodel"
 )
 
 // AddAccountBlockingStateReader is a Reader for the AddAccountBlockingState structure.

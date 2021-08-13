@@ -52,12 +52,16 @@ type Client struct {
 type IExport interface {
 	/*
 		ExportDataForAccount exports account data
+
+		resource description
 	*/
 	ExportDataForAccount(ctx context.Context, params *ExportDataForAccountParams) (*ExportDataForAccountOK, error)
 }
 
 /*
 ExportDataForAccount exports account data
+
+resource description
 */
 func (a *Client) ExportDataForAccount(ctx context.Context, params *ExportDataForAccountParams) (*ExportDataForAccountOK, error) {
 	// TODO: Validate the params before sending

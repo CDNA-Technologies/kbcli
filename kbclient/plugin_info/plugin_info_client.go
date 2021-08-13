@@ -52,12 +52,16 @@ type Client struct {
 type IPluginInfo interface {
 	/*
 		GetPluginsInfo retrieves the list of registered plugins
+
+		resource description
 	*/
 	GetPluginsInfo(ctx context.Context, params *GetPluginsInfoParams) (*GetPluginsInfoOK, error)
 }
 
 /*
 GetPluginsInfo retrieves the list of registered plugins
+
+resource description
 */
 func (a *Client) GetPluginsInfo(ctx context.Context, params *GetPluginsInfoParams) (*GetPluginsInfoOK, error) {
 	// TODO: Validate the params before sending

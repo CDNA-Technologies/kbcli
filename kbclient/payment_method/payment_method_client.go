@@ -9,8 +9,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/CDNA-Technologies/kbcli/v3/kbcommon"
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -53,57 +53,79 @@ type Client struct {
 type IPaymentMethod interface {
 	/*
 		CreatePaymentMethodCustomFields adds custom fields to payment method
+
+		resource description
 	*/
 	CreatePaymentMethodCustomFields(ctx context.Context, params *CreatePaymentMethodCustomFieldsParams) (*CreatePaymentMethodCustomFieldsCreated, error)
 
 	/*
 		DeletePaymentMethod deletes a payment method
+
+		resource description
 	*/
 	DeletePaymentMethod(ctx context.Context, params *DeletePaymentMethodParams) (*DeletePaymentMethodNoContent, error)
 
 	/*
 		DeletePaymentMethodCustomFields removes custom fields from payment method
+
+		resource description
 	*/
 	DeletePaymentMethodCustomFields(ctx context.Context, params *DeletePaymentMethodCustomFieldsParams) (*DeletePaymentMethodCustomFieldsNoContent, error)
 
 	/*
 		GetPaymentMethod retrieves a payment method by id
+
+		resource description
 	*/
 	GetPaymentMethod(ctx context.Context, params *GetPaymentMethodParams) (*GetPaymentMethodOK, error)
 
 	/*
 		GetPaymentMethodAuditLogsWithHistory retrieves payment method audit logs with history by id
+
+		resource description
 	*/
 	GetPaymentMethodAuditLogsWithHistory(ctx context.Context, params *GetPaymentMethodAuditLogsWithHistoryParams) (*GetPaymentMethodAuditLogsWithHistoryOK, error)
 
 	/*
 		GetPaymentMethodByKey retrieves a payment method by external key
+
+		resource description
 	*/
 	GetPaymentMethodByKey(ctx context.Context, params *GetPaymentMethodByKeyParams) (*GetPaymentMethodByKeyOK, error)
 
 	/*
 		GetPaymentMethodCustomFields retrieves payment method custom fields
+
+		resource description
 	*/
 	GetPaymentMethodCustomFields(ctx context.Context, params *GetPaymentMethodCustomFieldsParams) (*GetPaymentMethodCustomFieldsOK, error)
 
 	/*
 		GetPaymentMethods lists payment methods
+
+		resource description
 	*/
 	GetPaymentMethods(ctx context.Context, params *GetPaymentMethodsParams) (*GetPaymentMethodsOK, error)
 
 	/*
 		ModifyPaymentMethodCustomFields modifies custom fields to payment method
+
+		resource description
 	*/
 	ModifyPaymentMethodCustomFields(ctx context.Context, params *ModifyPaymentMethodCustomFieldsParams) (*ModifyPaymentMethodCustomFieldsNoContent, error)
 
 	/*
 		SearchPaymentMethods searches payment methods
+
+		resource description
 	*/
 	SearchPaymentMethods(ctx context.Context, params *SearchPaymentMethodsParams) (*SearchPaymentMethodsOK, error)
 }
 
 /*
 CreatePaymentMethodCustomFields adds custom fields to payment method
+
+resource description
 */
 func (a *Client) CreatePaymentMethodCustomFields(ctx context.Context, params *CreatePaymentMethodCustomFieldsParams) (*CreatePaymentMethodCustomFieldsCreated, error) {
 	// TODO: Validate the params before sending
@@ -178,6 +200,8 @@ func (a *Client) CreatePaymentMethodCustomFields(ctx context.Context, params *Cr
 
 /*
 DeletePaymentMethod deletes a payment method
+
+resource description
 */
 func (a *Client) DeletePaymentMethod(ctx context.Context, params *DeletePaymentMethodParams) (*DeletePaymentMethodNoContent, error) {
 	// TODO: Validate the params before sending
@@ -234,6 +258,8 @@ func (a *Client) DeletePaymentMethod(ctx context.Context, params *DeletePaymentM
 
 /*
 DeletePaymentMethodCustomFields removes custom fields from payment method
+
+resource description
 */
 func (a *Client) DeletePaymentMethodCustomFields(ctx context.Context, params *DeletePaymentMethodCustomFieldsParams) (*DeletePaymentMethodCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -290,6 +316,8 @@ func (a *Client) DeletePaymentMethodCustomFields(ctx context.Context, params *De
 
 /*
 GetPaymentMethod retrieves a payment method by id
+
+resource description
 */
 func (a *Client) GetPaymentMethod(ctx context.Context, params *GetPaymentMethodParams) (*GetPaymentMethodOK, error) {
 	// TODO: Validate the params before sending
@@ -334,6 +362,8 @@ func (a *Client) GetPaymentMethod(ctx context.Context, params *GetPaymentMethodP
 
 /*
 GetPaymentMethodAuditLogsWithHistory retrieves payment method audit logs with history by id
+
+resource description
 */
 func (a *Client) GetPaymentMethodAuditLogsWithHistory(ctx context.Context, params *GetPaymentMethodAuditLogsWithHistoryParams) (*GetPaymentMethodAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -378,6 +408,8 @@ func (a *Client) GetPaymentMethodAuditLogsWithHistory(ctx context.Context, param
 
 /*
 GetPaymentMethodByKey retrieves a payment method by external key
+
+resource description
 */
 func (a *Client) GetPaymentMethodByKey(ctx context.Context, params *GetPaymentMethodByKeyParams) (*GetPaymentMethodByKeyOK, error) {
 	// TODO: Validate the params before sending
@@ -422,6 +454,8 @@ func (a *Client) GetPaymentMethodByKey(ctx context.Context, params *GetPaymentMe
 
 /*
 GetPaymentMethodCustomFields retrieves payment method custom fields
+
+resource description
 */
 func (a *Client) GetPaymentMethodCustomFields(ctx context.Context, params *GetPaymentMethodCustomFieldsParams) (*GetPaymentMethodCustomFieldsOK, error) {
 	// TODO: Validate the params before sending
@@ -466,6 +500,8 @@ func (a *Client) GetPaymentMethodCustomFields(ctx context.Context, params *GetPa
 
 /*
 GetPaymentMethods lists payment methods
+
+resource description
 */
 func (a *Client) GetPaymentMethods(ctx context.Context, params *GetPaymentMethodsParams) (*GetPaymentMethodsOK, error) {
 	// TODO: Validate the params before sending
@@ -510,6 +546,8 @@ func (a *Client) GetPaymentMethods(ctx context.Context, params *GetPaymentMethod
 
 /*
 ModifyPaymentMethodCustomFields modifies custom fields to payment method
+
+resource description
 */
 func (a *Client) ModifyPaymentMethodCustomFields(ctx context.Context, params *ModifyPaymentMethodCustomFieldsParams) (*ModifyPaymentMethodCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -566,6 +604,8 @@ func (a *Client) ModifyPaymentMethodCustomFields(ctx context.Context, params *Mo
 
 /*
 SearchPaymentMethods searches payment methods
+
+resource description
 */
 func (a *Client) SearchPaymentMethods(ctx context.Context, params *SearchPaymentMethodsParams) (*SearchPaymentMethodsOK, error) {
 	// TODO: Validate the params before sending

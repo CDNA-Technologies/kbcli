@@ -9,8 +9,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/CDNA-Technologies/kbcli/v3/kbcommon"
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -53,32 +53,44 @@ type Client struct {
 type ITagDefinition interface {
 	/*
 		CreateTagDefinition creates a tag definition
+
+		resource description
 	*/
 	CreateTagDefinition(ctx context.Context, params *CreateTagDefinitionParams) (*CreateTagDefinitionCreated, error)
 
 	/*
 		DeleteTagDefinition deletes a tag definition
+
+		resource description
 	*/
 	DeleteTagDefinition(ctx context.Context, params *DeleteTagDefinitionParams) (*DeleteTagDefinitionNoContent, error)
 
 	/*
 		GetTagDefinition retrieves a tag definition
+
+		resource description
 	*/
 	GetTagDefinition(ctx context.Context, params *GetTagDefinitionParams) (*GetTagDefinitionOK, error)
 
 	/*
 		GetTagDefinitionAuditLogsWithHistory retrieves tag definition audit logs with history by id
+
+		resource description
 	*/
 	GetTagDefinitionAuditLogsWithHistory(ctx context.Context, params *GetTagDefinitionAuditLogsWithHistoryParams) (*GetTagDefinitionAuditLogsWithHistoryOK, error)
 
 	/*
 		GetTagDefinitions lists tag definitions
+
+		resource description
 	*/
 	GetTagDefinitions(ctx context.Context, params *GetTagDefinitionsParams) (*GetTagDefinitionsOK, error)
 }
 
 /*
 CreateTagDefinition creates a tag definition
+
+resource description
 */
 func (a *Client) CreateTagDefinition(ctx context.Context, params *CreateTagDefinitionParams) (*CreateTagDefinitionCreated, error) {
 	// TODO: Validate the params before sending
@@ -153,6 +165,8 @@ func (a *Client) CreateTagDefinition(ctx context.Context, params *CreateTagDefin
 
 /*
 DeleteTagDefinition deletes a tag definition
+
+resource description
 */
 func (a *Client) DeleteTagDefinition(ctx context.Context, params *DeleteTagDefinitionParams) (*DeleteTagDefinitionNoContent, error) {
 	// TODO: Validate the params before sending
@@ -209,6 +223,8 @@ func (a *Client) DeleteTagDefinition(ctx context.Context, params *DeleteTagDefin
 
 /*
 GetTagDefinition retrieves a tag definition
+
+resource description
 */
 func (a *Client) GetTagDefinition(ctx context.Context, params *GetTagDefinitionParams) (*GetTagDefinitionOK, error) {
 	// TODO: Validate the params before sending
@@ -253,6 +269,8 @@ func (a *Client) GetTagDefinition(ctx context.Context, params *GetTagDefinitionP
 
 /*
 GetTagDefinitionAuditLogsWithHistory retrieves tag definition audit logs with history by id
+
+resource description
 */
 func (a *Client) GetTagDefinitionAuditLogsWithHistory(ctx context.Context, params *GetTagDefinitionAuditLogsWithHistoryParams) (*GetTagDefinitionAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -297,6 +315,8 @@ func (a *Client) GetTagDefinitionAuditLogsWithHistory(ctx context.Context, param
 
 /*
 GetTagDefinitions lists tag definitions
+
+resource description
 */
 func (a *Client) GetTagDefinitions(ctx context.Context, params *GetTagDefinitionsParams) (*GetTagDefinitionsOK, error) {
 	// TODO: Validate the params before sending

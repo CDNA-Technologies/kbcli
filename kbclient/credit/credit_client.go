@@ -9,8 +9,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/CDNA-Technologies/kbcli/v3/kbcommon"
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -53,17 +53,23 @@ type Client struct {
 type ICredit interface {
 	/*
 		CreateCredits creates a credit
+
+		resource description
 	*/
 	CreateCredits(ctx context.Context, params *CreateCreditsParams) (*CreateCreditsCreated, error)
 
 	/*
 		GetCredit retrieves a credit by id
+
+		resource description
 	*/
 	GetCredit(ctx context.Context, params *GetCreditParams) (*GetCreditOK, error)
 }
 
 /*
 CreateCredits creates a credit
+
+resource description
 */
 func (a *Client) CreateCredits(ctx context.Context, params *CreateCreditsParams) (*CreateCreditsCreated, error) {
 	// TODO: Validate the params before sending
@@ -138,6 +144,8 @@ func (a *Client) CreateCredits(ctx context.Context, params *CreateCreditsParams)
 
 /*
 GetCredit retrieves a credit by id
+
+resource description
 */
 func (a *Client) GetCredit(ctx context.Context, params *GetCreditParams) (*GetCreditOK, error) {
 	// TODO: Validate the params before sending

@@ -9,8 +9,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/CDNA-Technologies/kbcli/v3/kbcommon"
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -53,212 +53,296 @@ type Client struct {
 type IAccount interface {
 	/*
 		AddAccountBlockingState blocks an account
+
+		resource description
 	*/
 	AddAccountBlockingState(ctx context.Context, params *AddAccountBlockingStateParams) (*AddAccountBlockingStateCreated, error)
 
 	/*
 		AddEmail adds account email
+
+		resource description
 	*/
 	AddEmail(ctx context.Context, params *AddEmailParams) (*AddEmailCreated, error)
 
 	/*
 		CloseAccount closes account
+
+		resource description
 	*/
 	CloseAccount(ctx context.Context, params *CloseAccountParams) (*CloseAccountNoContent, error)
 
 	/*
 		CreateAccount creates account
+
+		resource description
 	*/
 	CreateAccount(ctx context.Context, params *CreateAccountParams) (*CreateAccountCreated, error)
 
 	/*
 		CreateAccountCustomFields adds custom fields to account
+
+		resource description
 	*/
 	CreateAccountCustomFields(ctx context.Context, params *CreateAccountCustomFieldsParams) (*CreateAccountCustomFieldsCreated, error)
 
 	/*
 		CreateAccountTags adds tags to account
+
+		resource description
 	*/
 	CreateAccountTags(ctx context.Context, params *CreateAccountTagsParams) (*CreateAccountTagsCreated, error)
 
 	/*
 		CreatePaymentMethod adds a payment method
+
+		resource description
 	*/
 	CreatePaymentMethod(ctx context.Context, params *CreatePaymentMethodParams) (*CreatePaymentMethodCreated, error)
 
 	/*
 		DeleteAccountCustomFields removes custom fields from account
+
+		resource description
 	*/
 	DeleteAccountCustomFields(ctx context.Context, params *DeleteAccountCustomFieldsParams) (*DeleteAccountCustomFieldsNoContent, error)
 
 	/*
 		DeleteAccountTags removes tags from account
+
+		resource description
 	*/
 	DeleteAccountTags(ctx context.Context, params *DeleteAccountTagsParams) (*DeleteAccountTagsNoContent, error)
 
 	/*
 		GetAccount retrieves an account by id
+
+		resource description
 	*/
 	GetAccount(ctx context.Context, params *GetAccountParams) (*GetAccountOK, error)
 
 	/*
 		GetAccountAuditLogs retrieves audit logs by account id
+
+		resource description
 	*/
 	GetAccountAuditLogs(ctx context.Context, params *GetAccountAuditLogsParams) (*GetAccountAuditLogsOK, error)
 
 	/*
 		GetAccountAuditLogsWithHistory retrieves account audit logs with history by account id
+
+		resource description
 	*/
 	GetAccountAuditLogsWithHistory(ctx context.Context, params *GetAccountAuditLogsWithHistoryParams) (*GetAccountAuditLogsWithHistoryOK, error)
 
 	/*
 		GetAccountBundles retrieves bundles for account
+
+		resource description
 	*/
 	GetAccountBundles(ctx context.Context, params *GetAccountBundlesParams) (*GetAccountBundlesOK, error)
 
 	/*
 		GetAccountByKey retrieves an account by external key
+
+		resource description
 	*/
 	GetAccountByKey(ctx context.Context, params *GetAccountByKeyParams) (*GetAccountByKeyOK, error)
 
 	/*
 		GetAccountCustomFields retrieves account custom fields
+
+		resource description
 	*/
 	GetAccountCustomFields(ctx context.Context, params *GetAccountCustomFieldsParams) (*GetAccountCustomFieldsOK, error)
 
 	/*
 		GetAccountEmailAuditLogsWithHistory retrieves account email audit logs with history by id
+
+		resource description
 	*/
 	GetAccountEmailAuditLogsWithHistory(ctx context.Context, params *GetAccountEmailAuditLogsWithHistoryParams) (*GetAccountEmailAuditLogsWithHistoryOK, error)
 
 	/*
 		GetAccountTags retrieves account tags
+
+		resource description
 	*/
 	GetAccountTags(ctx context.Context, params *GetAccountTagsParams) (*GetAccountTagsOK, error)
 
 	/*
 		GetAccountTimeline retrieves account timeline
+
+		resource description
 	*/
 	GetAccountTimeline(ctx context.Context, params *GetAccountTimelineParams) (*GetAccountTimelineOK, error)
 
 	/*
 		GetAccounts lists accounts
+
+		resource description
 	*/
 	GetAccounts(ctx context.Context, params *GetAccountsParams) (*GetAccountsOK, error)
 
 	/*
 		GetAllCustomFields retrieves account custom fields
+
+		resource description
 	*/
 	GetAllCustomFields(ctx context.Context, params *GetAllCustomFieldsParams) (*GetAllCustomFieldsOK, error)
 
 	/*
 		GetAllTags retrieves account tags
+
+		resource description
 	*/
 	GetAllTags(ctx context.Context, params *GetAllTagsParams) (*GetAllTagsOK, error)
 
 	/*
 		GetBlockingStateAuditLogsWithHistory retrieves blocking state audit logs with history by id
+
+		resource description
 	*/
 	GetBlockingStateAuditLogsWithHistory(ctx context.Context, params *GetBlockingStateAuditLogsWithHistoryParams) (*GetBlockingStateAuditLogsWithHistoryOK, error)
 
 	/*
 		GetBlockingStates retrieves blocking states for account
+
+		resource description
 	*/
 	GetBlockingStates(ctx context.Context, params *GetBlockingStatesParams) (*GetBlockingStatesOK, error)
 
 	/*
 		GetChildrenAccounts lists children accounts
+
+		resource description
 	*/
 	GetChildrenAccounts(ctx context.Context, params *GetChildrenAccountsParams) (*GetChildrenAccountsOK, error)
 
 	/*
 		GetEmails retrieves an account emails
+
+		resource description
 	*/
 	GetEmails(ctx context.Context, params *GetEmailsParams) (*GetEmailsOK, error)
 
 	/*
 		GetInvoicePayments retrieves account invoice payments
+
+		resource description
 	*/
 	GetInvoicePayments(ctx context.Context, params *GetInvoicePaymentsParams) (*GetInvoicePaymentsOK, error)
 
 	/*
 		GetInvoicesForAccount retrieves account invoices
+
+		resource description
 	*/
 	GetInvoicesForAccount(ctx context.Context, params *GetInvoicesForAccountParams) (*GetInvoicesForAccountOK, error)
 
 	/*
 		GetOverdueAccount retrieves overdue state for account
+
+		resource description
 	*/
 	GetOverdueAccount(ctx context.Context, params *GetOverdueAccountParams) (*GetOverdueAccountOK, error)
 
 	/*
 		GetPaymentMethodsForAccount retrieves account payment methods
+
+		resource description
 	*/
 	GetPaymentMethodsForAccount(ctx context.Context, params *GetPaymentMethodsForAccountParams) (*GetPaymentMethodsForAccountOK, error)
 
 	/*
 		GetPaymentsForAccount retrieves account payments
+
+		resource description
 	*/
 	GetPaymentsForAccount(ctx context.Context, params *GetPaymentsForAccountParams) (*GetPaymentsForAccountOK, error)
 
 	/*
 		ModifyAccountCustomFields modifies custom fields to account
+
+		resource description
 	*/
 	ModifyAccountCustomFields(ctx context.Context, params *ModifyAccountCustomFieldsParams) (*ModifyAccountCustomFieldsNoContent, error)
 
 	/*
 		PayAllInvoices triggers a payment for all unpaid invoices
+
+		resource description
 	*/
-	PayAllInvoices(ctx context.Context, params *PayAllInvoicesParams) (*PayAllInvoicesNoContent, error)
+	PayAllInvoices(ctx context.Context, params *PayAllInvoicesParams) (*PayAllInvoicesCreated, *PayAllInvoicesNoContent, error)
 
 	/*
 		ProcessPayment triggers a payment authorization purchase or credit
+
+		resource description
 	*/
 	ProcessPayment(ctx context.Context, params *ProcessPaymentParams) (*ProcessPaymentCreated, error)
 
 	/*
 		ProcessPaymentByExternalKey triggers a payment using the account external key authorization purchase or credit
+
+		resource description
 	*/
 	ProcessPaymentByExternalKey(ctx context.Context, params *ProcessPaymentByExternalKeyParams) (*ProcessPaymentByExternalKeyCreated, error)
 
 	/*
 		RebalanceExistingCBAOnAccount rebalances account c b a
+
+		resource description
 	*/
 	RebalanceExistingCBAOnAccount(ctx context.Context, params *RebalanceExistingCBAOnAccountParams) (*RebalanceExistingCBAOnAccountNoContent, error)
 
 	/*
 		RefreshPaymentMethods refreshes account payment methods
+
+		resource description
 	*/
 	RefreshPaymentMethods(ctx context.Context, params *RefreshPaymentMethodsParams) (*RefreshPaymentMethodsNoContent, error)
 
 	/*
 		RemoveEmail deletes email from account
+
+		resource description
 	*/
 	RemoveEmail(ctx context.Context, params *RemoveEmailParams) (*RemoveEmailNoContent, error)
 
 	/*
 		SearchAccounts searches accounts
+
+		resource description
 	*/
 	SearchAccounts(ctx context.Context, params *SearchAccountsParams) (*SearchAccountsOK, error)
 
 	/*
 		SetDefaultPaymentMethod sets the default payment method
+
+		resource description
 	*/
 	SetDefaultPaymentMethod(ctx context.Context, params *SetDefaultPaymentMethodParams) (*SetDefaultPaymentMethodNoContent, error)
 
 	/*
 		TransferChildCreditToParent moves a given child credit to the parent level
+
+		resource description
 	*/
 	TransferChildCreditToParent(ctx context.Context, params *TransferChildCreditToParentParams) (*TransferChildCreditToParentNoContent, error)
 
 	/*
 		UpdateAccount updates account
+
+		resource description
 	*/
 	UpdateAccount(ctx context.Context, params *UpdateAccountParams) (*UpdateAccountNoContent, error)
 }
 
 /*
 AddAccountBlockingState blocks an account
+
+resource description
 */
 func (a *Client) AddAccountBlockingState(ctx context.Context, params *AddAccountBlockingStateParams) (*AddAccountBlockingStateCreated, error) {
 	// TODO: Validate the params before sending
@@ -333,6 +417,8 @@ func (a *Client) AddAccountBlockingState(ctx context.Context, params *AddAccount
 
 /*
 AddEmail adds account email
+
+resource description
 */
 func (a *Client) AddEmail(ctx context.Context, params *AddEmailParams) (*AddEmailCreated, error) {
 	// TODO: Validate the params before sending
@@ -407,6 +493,8 @@ func (a *Client) AddEmail(ctx context.Context, params *AddEmailParams) (*AddEmai
 
 /*
 CloseAccount closes account
+
+resource description
 */
 func (a *Client) CloseAccount(ctx context.Context, params *CloseAccountParams) (*CloseAccountNoContent, error) {
 	// TODO: Validate the params before sending
@@ -463,6 +551,8 @@ func (a *Client) CloseAccount(ctx context.Context, params *CloseAccountParams) (
 
 /*
 CreateAccount creates account
+
+resource description
 */
 func (a *Client) CreateAccount(ctx context.Context, params *CreateAccountParams) (*CreateAccountCreated, error) {
 	// TODO: Validate the params before sending
@@ -537,6 +627,8 @@ func (a *Client) CreateAccount(ctx context.Context, params *CreateAccountParams)
 
 /*
 CreateAccountCustomFields adds custom fields to account
+
+resource description
 */
 func (a *Client) CreateAccountCustomFields(ctx context.Context, params *CreateAccountCustomFieldsParams) (*CreateAccountCustomFieldsCreated, error) {
 	// TODO: Validate the params before sending
@@ -611,6 +703,8 @@ func (a *Client) CreateAccountCustomFields(ctx context.Context, params *CreateAc
 
 /*
 CreateAccountTags adds tags to account
+
+resource description
 */
 func (a *Client) CreateAccountTags(ctx context.Context, params *CreateAccountTagsParams) (*CreateAccountTagsCreated, error) {
 	// TODO: Validate the params before sending
@@ -685,6 +779,8 @@ func (a *Client) CreateAccountTags(ctx context.Context, params *CreateAccountTag
 
 /*
 CreatePaymentMethod adds a payment method
+
+resource description
 */
 func (a *Client) CreatePaymentMethod(ctx context.Context, params *CreatePaymentMethodParams) (*CreatePaymentMethodCreated, error) {
 	// TODO: Validate the params before sending
@@ -759,6 +855,8 @@ func (a *Client) CreatePaymentMethod(ctx context.Context, params *CreatePaymentM
 
 /*
 DeleteAccountCustomFields removes custom fields from account
+
+resource description
 */
 func (a *Client) DeleteAccountCustomFields(ctx context.Context, params *DeleteAccountCustomFieldsParams) (*DeleteAccountCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -815,6 +913,8 @@ func (a *Client) DeleteAccountCustomFields(ctx context.Context, params *DeleteAc
 
 /*
 DeleteAccountTags removes tags from account
+
+resource description
 */
 func (a *Client) DeleteAccountTags(ctx context.Context, params *DeleteAccountTagsParams) (*DeleteAccountTagsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -871,6 +971,8 @@ func (a *Client) DeleteAccountTags(ctx context.Context, params *DeleteAccountTag
 
 /*
 GetAccount retrieves an account by id
+
+resource description
 */
 func (a *Client) GetAccount(ctx context.Context, params *GetAccountParams) (*GetAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -915,6 +1017,8 @@ func (a *Client) GetAccount(ctx context.Context, params *GetAccountParams) (*Get
 
 /*
 GetAccountAuditLogs retrieves audit logs by account id
+
+resource description
 */
 func (a *Client) GetAccountAuditLogs(ctx context.Context, params *GetAccountAuditLogsParams) (*GetAccountAuditLogsOK, error) {
 	// TODO: Validate the params before sending
@@ -959,6 +1063,8 @@ func (a *Client) GetAccountAuditLogs(ctx context.Context, params *GetAccountAudi
 
 /*
 GetAccountAuditLogsWithHistory retrieves account audit logs with history by account id
+
+resource description
 */
 func (a *Client) GetAccountAuditLogsWithHistory(ctx context.Context, params *GetAccountAuditLogsWithHistoryParams) (*GetAccountAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -1003,6 +1109,8 @@ func (a *Client) GetAccountAuditLogsWithHistory(ctx context.Context, params *Get
 
 /*
 GetAccountBundles retrieves bundles for account
+
+resource description
 */
 func (a *Client) GetAccountBundles(ctx context.Context, params *GetAccountBundlesParams) (*GetAccountBundlesOK, error) {
 	// TODO: Validate the params before sending
@@ -1047,6 +1155,8 @@ func (a *Client) GetAccountBundles(ctx context.Context, params *GetAccountBundle
 
 /*
 GetAccountByKey retrieves an account by external key
+
+resource description
 */
 func (a *Client) GetAccountByKey(ctx context.Context, params *GetAccountByKeyParams) (*GetAccountByKeyOK, error) {
 	// TODO: Validate the params before sending
@@ -1091,6 +1201,8 @@ func (a *Client) GetAccountByKey(ctx context.Context, params *GetAccountByKeyPar
 
 /*
 GetAccountCustomFields retrieves account custom fields
+
+resource description
 */
 func (a *Client) GetAccountCustomFields(ctx context.Context, params *GetAccountCustomFieldsParams) (*GetAccountCustomFieldsOK, error) {
 	// TODO: Validate the params before sending
@@ -1135,6 +1247,8 @@ func (a *Client) GetAccountCustomFields(ctx context.Context, params *GetAccountC
 
 /*
 GetAccountEmailAuditLogsWithHistory retrieves account email audit logs with history by id
+
+resource description
 */
 func (a *Client) GetAccountEmailAuditLogsWithHistory(ctx context.Context, params *GetAccountEmailAuditLogsWithHistoryParams) (*GetAccountEmailAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -1179,6 +1293,8 @@ func (a *Client) GetAccountEmailAuditLogsWithHistory(ctx context.Context, params
 
 /*
 GetAccountTags retrieves account tags
+
+resource description
 */
 func (a *Client) GetAccountTags(ctx context.Context, params *GetAccountTagsParams) (*GetAccountTagsOK, error) {
 	// TODO: Validate the params before sending
@@ -1223,6 +1339,8 @@ func (a *Client) GetAccountTags(ctx context.Context, params *GetAccountTagsParam
 
 /*
 GetAccountTimeline retrieves account timeline
+
+resource description
 */
 func (a *Client) GetAccountTimeline(ctx context.Context, params *GetAccountTimelineParams) (*GetAccountTimelineOK, error) {
 	// TODO: Validate the params before sending
@@ -1267,6 +1385,8 @@ func (a *Client) GetAccountTimeline(ctx context.Context, params *GetAccountTimel
 
 /*
 GetAccounts lists accounts
+
+resource description
 */
 func (a *Client) GetAccounts(ctx context.Context, params *GetAccountsParams) (*GetAccountsOK, error) {
 	// TODO: Validate the params before sending
@@ -1311,6 +1431,8 @@ func (a *Client) GetAccounts(ctx context.Context, params *GetAccountsParams) (*G
 
 /*
 GetAllCustomFields retrieves account custom fields
+
+resource description
 */
 func (a *Client) GetAllCustomFields(ctx context.Context, params *GetAllCustomFieldsParams) (*GetAllCustomFieldsOK, error) {
 	// TODO: Validate the params before sending
@@ -1355,6 +1477,8 @@ func (a *Client) GetAllCustomFields(ctx context.Context, params *GetAllCustomFie
 
 /*
 GetAllTags retrieves account tags
+
+resource description
 */
 func (a *Client) GetAllTags(ctx context.Context, params *GetAllTagsParams) (*GetAllTagsOK, error) {
 	// TODO: Validate the params before sending
@@ -1399,6 +1523,8 @@ func (a *Client) GetAllTags(ctx context.Context, params *GetAllTagsParams) (*Get
 
 /*
 GetBlockingStateAuditLogsWithHistory retrieves blocking state audit logs with history by id
+
+resource description
 */
 func (a *Client) GetBlockingStateAuditLogsWithHistory(ctx context.Context, params *GetBlockingStateAuditLogsWithHistoryParams) (*GetBlockingStateAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -1443,6 +1569,8 @@ func (a *Client) GetBlockingStateAuditLogsWithHistory(ctx context.Context, param
 
 /*
 GetBlockingStates retrieves blocking states for account
+
+resource description
 */
 func (a *Client) GetBlockingStates(ctx context.Context, params *GetBlockingStatesParams) (*GetBlockingStatesOK, error) {
 	// TODO: Validate the params before sending
@@ -1487,6 +1615,8 @@ func (a *Client) GetBlockingStates(ctx context.Context, params *GetBlockingState
 
 /*
 GetChildrenAccounts lists children accounts
+
+resource description
 */
 func (a *Client) GetChildrenAccounts(ctx context.Context, params *GetChildrenAccountsParams) (*GetChildrenAccountsOK, error) {
 	// TODO: Validate the params before sending
@@ -1531,6 +1661,8 @@ func (a *Client) GetChildrenAccounts(ctx context.Context, params *GetChildrenAcc
 
 /*
 GetEmails retrieves an account emails
+
+resource description
 */
 func (a *Client) GetEmails(ctx context.Context, params *GetEmailsParams) (*GetEmailsOK, error) {
 	// TODO: Validate the params before sending
@@ -1575,6 +1707,8 @@ func (a *Client) GetEmails(ctx context.Context, params *GetEmailsParams) (*GetEm
 
 /*
 GetInvoicePayments retrieves account invoice payments
+
+resource description
 */
 func (a *Client) GetInvoicePayments(ctx context.Context, params *GetInvoicePaymentsParams) (*GetInvoicePaymentsOK, error) {
 	// TODO: Validate the params before sending
@@ -1619,6 +1753,8 @@ func (a *Client) GetInvoicePayments(ctx context.Context, params *GetInvoicePayme
 
 /*
 GetInvoicesForAccount retrieves account invoices
+
+resource description
 */
 func (a *Client) GetInvoicesForAccount(ctx context.Context, params *GetInvoicesForAccountParams) (*GetInvoicesForAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -1663,6 +1799,8 @@ func (a *Client) GetInvoicesForAccount(ctx context.Context, params *GetInvoicesF
 
 /*
 GetOverdueAccount retrieves overdue state for account
+
+resource description
 */
 func (a *Client) GetOverdueAccount(ctx context.Context, params *GetOverdueAccountParams) (*GetOverdueAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -1707,6 +1845,8 @@ func (a *Client) GetOverdueAccount(ctx context.Context, params *GetOverdueAccoun
 
 /*
 GetPaymentMethodsForAccount retrieves account payment methods
+
+resource description
 */
 func (a *Client) GetPaymentMethodsForAccount(ctx context.Context, params *GetPaymentMethodsForAccountParams) (*GetPaymentMethodsForAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -1751,6 +1891,8 @@ func (a *Client) GetPaymentMethodsForAccount(ctx context.Context, params *GetPay
 
 /*
 GetPaymentsForAccount retrieves account payments
+
+resource description
 */
 func (a *Client) GetPaymentsForAccount(ctx context.Context, params *GetPaymentsForAccountParams) (*GetPaymentsForAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -1795,6 +1937,8 @@ func (a *Client) GetPaymentsForAccount(ctx context.Context, params *GetPaymentsF
 
 /*
 ModifyAccountCustomFields modifies custom fields to account
+
+resource description
 */
 func (a *Client) ModifyAccountCustomFields(ctx context.Context, params *ModifyAccountCustomFieldsParams) (*ModifyAccountCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1851,8 +1995,10 @@ func (a *Client) ModifyAccountCustomFields(ctx context.Context, params *ModifyAc
 
 /*
 PayAllInvoices triggers a payment for all unpaid invoices
+
+resource description
 */
-func (a *Client) PayAllInvoices(ctx context.Context, params *PayAllInvoicesParams) (*PayAllInvoicesNoContent, error) {
+func (a *Client) PayAllInvoices(ctx context.Context, params *PayAllInvoicesParams) (*PayAllInvoicesCreated, *PayAllInvoicesNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPayAllInvoicesParams()
@@ -1892,21 +2038,24 @@ func (a *Client) PayAllInvoices(ctx context.Context, params *PayAllInvoicesParam
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	success, ok := result.(*PayAllInvoicesNoContent)
-	if ok {
-		return success, nil
+	switch value := result.(type) {
+	case *PayAllInvoicesCreated:
+		return value, nil, nil
+	case *PayAllInvoicesNoContent:
+		return nil, value, nil
 	}
-	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for payAllInvoices: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for account: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 
 }
 
 /*
 ProcessPayment triggers a payment authorization purchase or credit
+
+resource description
 */
 func (a *Client) ProcessPayment(ctx context.Context, params *ProcessPaymentParams) (*ProcessPaymentCreated, error) {
 	// TODO: Validate the params before sending
@@ -1981,6 +2130,8 @@ func (a *Client) ProcessPayment(ctx context.Context, params *ProcessPaymentParam
 
 /*
 ProcessPaymentByExternalKey triggers a payment using the account external key authorization purchase or credit
+
+resource description
 */
 func (a *Client) ProcessPaymentByExternalKey(ctx context.Context, params *ProcessPaymentByExternalKeyParams) (*ProcessPaymentByExternalKeyCreated, error) {
 	// TODO: Validate the params before sending
@@ -2055,6 +2206,8 @@ func (a *Client) ProcessPaymentByExternalKey(ctx context.Context, params *Proces
 
 /*
 RebalanceExistingCBAOnAccount rebalances account c b a
+
+resource description
 */
 func (a *Client) RebalanceExistingCBAOnAccount(ctx context.Context, params *RebalanceExistingCBAOnAccountParams) (*RebalanceExistingCBAOnAccountNoContent, error) {
 	// TODO: Validate the params before sending
@@ -2111,6 +2264,8 @@ func (a *Client) RebalanceExistingCBAOnAccount(ctx context.Context, params *Reba
 
 /*
 RefreshPaymentMethods refreshes account payment methods
+
+resource description
 */
 func (a *Client) RefreshPaymentMethods(ctx context.Context, params *RefreshPaymentMethodsParams) (*RefreshPaymentMethodsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -2167,6 +2322,8 @@ func (a *Client) RefreshPaymentMethods(ctx context.Context, params *RefreshPayme
 
 /*
 RemoveEmail deletes email from account
+
+resource description
 */
 func (a *Client) RemoveEmail(ctx context.Context, params *RemoveEmailParams) (*RemoveEmailNoContent, error) {
 	// TODO: Validate the params before sending
@@ -2223,6 +2380,8 @@ func (a *Client) RemoveEmail(ctx context.Context, params *RemoveEmailParams) (*R
 
 /*
 SearchAccounts searches accounts
+
+resource description
 */
 func (a *Client) SearchAccounts(ctx context.Context, params *SearchAccountsParams) (*SearchAccountsOK, error) {
 	// TODO: Validate the params before sending
@@ -2267,6 +2426,8 @@ func (a *Client) SearchAccounts(ctx context.Context, params *SearchAccountsParam
 
 /*
 SetDefaultPaymentMethod sets the default payment method
+
+resource description
 */
 func (a *Client) SetDefaultPaymentMethod(ctx context.Context, params *SetDefaultPaymentMethodParams) (*SetDefaultPaymentMethodNoContent, error) {
 	// TODO: Validate the params before sending
@@ -2323,6 +2484,8 @@ func (a *Client) SetDefaultPaymentMethod(ctx context.Context, params *SetDefault
 
 /*
 TransferChildCreditToParent moves a given child credit to the parent level
+
+resource description
 */
 func (a *Client) TransferChildCreditToParent(ctx context.Context, params *TransferChildCreditToParentParams) (*TransferChildCreditToParentNoContent, error) {
 	// TODO: Validate the params before sending
@@ -2379,6 +2542,8 @@ func (a *Client) TransferChildCreditToParent(ctx context.Context, params *Transf
 
 /*
 UpdateAccount updates account
+
+resource description
 */
 func (a *Client) UpdateAccount(ctx context.Context, params *UpdateAccountParams) (*UpdateAccountNoContent, error) {
 	// TODO: Validate the params before sending

@@ -9,8 +9,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/CDNA-Technologies/kbcli/v3/kbcommon"
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -53,62 +53,86 @@ type Client struct {
 type IPaymentTransaction interface {
 	/*
 		CreateTransactionCustomFields adds custom fields to payment transaction
+
+		resource description
 	*/
 	CreateTransactionCustomFields(ctx context.Context, params *CreateTransactionCustomFieldsParams) (*CreateTransactionCustomFieldsCreated, error)
 
 	/*
 		CreateTransactionTags adds tags to payment transaction
+
+		resource description
 	*/
 	CreateTransactionTags(ctx context.Context, params *CreateTransactionTagsParams) (*CreateTransactionTagsCreated, error)
 
 	/*
 		DeleteTransactionCustomFields removes custom fields from payment transaction
+
+		resource description
 	*/
 	DeleteTransactionCustomFields(ctx context.Context, params *DeleteTransactionCustomFieldsParams) (*DeleteTransactionCustomFieldsNoContent, error)
 
 	/*
 		DeleteTransactionTags removes tags from payment transaction
+
+		resource description
 	*/
 	DeleteTransactionTags(ctx context.Context, params *DeleteTransactionTagsParams) (*DeleteTransactionTagsNoContent, error)
 
 	/*
 		GetPaymentByTransactionExternalKey retrieves a payment by transaction external key
+
+		resource description
 	*/
 	GetPaymentByTransactionExternalKey(ctx context.Context, params *GetPaymentByTransactionExternalKeyParams) (*GetPaymentByTransactionExternalKeyOK, error)
 
 	/*
 		GetPaymentByTransactionID retrieves a payment by transaction id
+
+		resource description
 	*/
 	GetPaymentByTransactionID(ctx context.Context, params *GetPaymentByTransactionIDParams) (*GetPaymentByTransactionIDOK, error)
 
 	/*
 		GetTransactionAuditLogsWithHistory retrieves payment transaction audit logs with history by id
+
+		resource description
 	*/
 	GetTransactionAuditLogsWithHistory(ctx context.Context, params *GetTransactionAuditLogsWithHistoryParams) (*GetTransactionAuditLogsWithHistoryOK, error)
 
 	/*
 		GetTransactionCustomFields retrieves payment transaction custom fields
+
+		resource description
 	*/
 	GetTransactionCustomFields(ctx context.Context, params *GetTransactionCustomFieldsParams) (*GetTransactionCustomFieldsOK, error)
 
 	/*
 		GetTransactionTags retrieves payment transaction tags
+
+		resource description
 	*/
 	GetTransactionTags(ctx context.Context, params *GetTransactionTagsParams) (*GetTransactionTagsOK, error)
 
 	/*
 		ModifyTransactionCustomFields modifies custom fields to payment transaction
+
+		resource description
 	*/
 	ModifyTransactionCustomFields(ctx context.Context, params *ModifyTransactionCustomFieldsParams) (*ModifyTransactionCustomFieldsNoContent, error)
 
 	/*
 		NotifyStateChanged marks a pending payment transaction as succeeded or failed
+
+		resource description
 	*/
 	NotifyStateChanged(ctx context.Context, params *NotifyStateChangedParams) (*NotifyStateChangedCreated, error)
 }
 
 /*
 CreateTransactionCustomFields adds custom fields to payment transaction
+
+resource description
 */
 func (a *Client) CreateTransactionCustomFields(ctx context.Context, params *CreateTransactionCustomFieldsParams) (*CreateTransactionCustomFieldsCreated, error) {
 	// TODO: Validate the params before sending
@@ -183,6 +207,8 @@ func (a *Client) CreateTransactionCustomFields(ctx context.Context, params *Crea
 
 /*
 CreateTransactionTags adds tags to payment transaction
+
+resource description
 */
 func (a *Client) CreateTransactionTags(ctx context.Context, params *CreateTransactionTagsParams) (*CreateTransactionTagsCreated, error) {
 	// TODO: Validate the params before sending
@@ -257,6 +283,8 @@ func (a *Client) CreateTransactionTags(ctx context.Context, params *CreateTransa
 
 /*
 DeleteTransactionCustomFields removes custom fields from payment transaction
+
+resource description
 */
 func (a *Client) DeleteTransactionCustomFields(ctx context.Context, params *DeleteTransactionCustomFieldsParams) (*DeleteTransactionCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -313,6 +341,8 @@ func (a *Client) DeleteTransactionCustomFields(ctx context.Context, params *Dele
 
 /*
 DeleteTransactionTags removes tags from payment transaction
+
+resource description
 */
 func (a *Client) DeleteTransactionTags(ctx context.Context, params *DeleteTransactionTagsParams) (*DeleteTransactionTagsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -369,6 +399,8 @@ func (a *Client) DeleteTransactionTags(ctx context.Context, params *DeleteTransa
 
 /*
 GetPaymentByTransactionExternalKey retrieves a payment by transaction external key
+
+resource description
 */
 func (a *Client) GetPaymentByTransactionExternalKey(ctx context.Context, params *GetPaymentByTransactionExternalKeyParams) (*GetPaymentByTransactionExternalKeyOK, error) {
 	// TODO: Validate the params before sending
@@ -413,6 +445,8 @@ func (a *Client) GetPaymentByTransactionExternalKey(ctx context.Context, params 
 
 /*
 GetPaymentByTransactionID retrieves a payment by transaction id
+
+resource description
 */
 func (a *Client) GetPaymentByTransactionID(ctx context.Context, params *GetPaymentByTransactionIDParams) (*GetPaymentByTransactionIDOK, error) {
 	// TODO: Validate the params before sending
@@ -457,6 +491,8 @@ func (a *Client) GetPaymentByTransactionID(ctx context.Context, params *GetPayme
 
 /*
 GetTransactionAuditLogsWithHistory retrieves payment transaction audit logs with history by id
+
+resource description
 */
 func (a *Client) GetTransactionAuditLogsWithHistory(ctx context.Context, params *GetTransactionAuditLogsWithHistoryParams) (*GetTransactionAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -501,6 +537,8 @@ func (a *Client) GetTransactionAuditLogsWithHistory(ctx context.Context, params 
 
 /*
 GetTransactionCustomFields retrieves payment transaction custom fields
+
+resource description
 */
 func (a *Client) GetTransactionCustomFields(ctx context.Context, params *GetTransactionCustomFieldsParams) (*GetTransactionCustomFieldsOK, error) {
 	// TODO: Validate the params before sending
@@ -545,6 +583,8 @@ func (a *Client) GetTransactionCustomFields(ctx context.Context, params *GetTran
 
 /*
 GetTransactionTags retrieves payment transaction tags
+
+resource description
 */
 func (a *Client) GetTransactionTags(ctx context.Context, params *GetTransactionTagsParams) (*GetTransactionTagsOK, error) {
 	// TODO: Validate the params before sending
@@ -589,6 +629,8 @@ func (a *Client) GetTransactionTags(ctx context.Context, params *GetTransactionT
 
 /*
 ModifyTransactionCustomFields modifies custom fields to payment transaction
+
+resource description
 */
 func (a *Client) ModifyTransactionCustomFields(ctx context.Context, params *ModifyTransactionCustomFieldsParams) (*ModifyTransactionCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -645,6 +687,8 @@ func (a *Client) ModifyTransactionCustomFields(ctx context.Context, params *Modi
 
 /*
 NotifyStateChanged marks a pending payment transaction as succeeded or failed
+
+resource description
 */
 func (a *Client) NotifyStateChanged(ctx context.Context, params *NotifyStateChangedParams) (*NotifyStateChangedCreated, error) {
 	// TODO: Validate the params before sending

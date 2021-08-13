@@ -106,6 +106,8 @@ type GetInvoicesForAccountParams struct {
 	EndDate *strfmt.Date
 	/*IncludeVoidedInvoices*/
 	IncludeVoidedInvoices *bool
+	/*InvoicesFilter*/
+	InvoicesFilter *string
 	/*StartDate*/
 	StartDate *strfmt.Date
 	/*UnpaidInvoicesOnly*/
@@ -198,6 +200,17 @@ func (o *GetInvoicesForAccountParams) SetIncludeVoidedInvoices(includeVoidedInvo
 	o.IncludeVoidedInvoices = includeVoidedInvoices
 }
 
+// WithInvoicesFilter adds the invoicesFilter to the get invoices for account params
+func (o *GetInvoicesForAccountParams) WithInvoicesFilter(invoicesFilter *string) *GetInvoicesForAccountParams {
+	o.SetInvoicesFilter(invoicesFilter)
+	return o
+}
+
+// SetInvoicesFilter adds the invoicesFilter to the get invoices for account params
+func (o *GetInvoicesForAccountParams) SetInvoicesFilter(invoicesFilter *string) {
+	o.InvoicesFilter = invoicesFilter
+}
+
 // WithStartDate adds the startDate to the get invoices for account params
 func (o *GetInvoicesForAccountParams) WithStartDate(startDate *strfmt.Date) *GetInvoicesForAccountParams {
 	o.SetStartDate(startDate)
@@ -286,6 +299,22 @@ func (o *GetInvoicesForAccountParams) WriteToRequest(r runtime.ClientRequest, re
 		qIncludeVoidedInvoices := swag.FormatBool(qrIncludeVoidedInvoices)
 		if qIncludeVoidedInvoices != "" {
 			if err := r.SetQueryParam("includeVoidedInvoices", qIncludeVoidedInvoices); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.InvoicesFilter != nil {
+
+		// query param invoicesFilter
+		var qrInvoicesFilter string
+		if o.InvoicesFilter != nil {
+			qrInvoicesFilter = *o.InvoicesFilter
+		}
+		qInvoicesFilter := qrInvoicesFilter
+		if qInvoicesFilter != "" {
+			if err := r.SetQueryParam("invoicesFilter", qInvoicesFilter); err != nil {
 				return err
 			}
 		}

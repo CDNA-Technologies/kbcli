@@ -9,8 +9,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/CDNA-Technologies/kbcli/v3/kbcommon"
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -53,172 +53,240 @@ type Client struct {
 type IInvoice interface {
 	/*
 		AdjustInvoiceItem adjusts an invoice item
+
+		resource description
 	*/
 	AdjustInvoiceItem(ctx context.Context, params *AdjustInvoiceItemParams) (*AdjustInvoiceItemCreated, error)
 
 	/*
 		CommitInvoice performs the invoice status transition from d r a f t to c o m m i t t e d
+
+		resource description
 	*/
 	CommitInvoice(ctx context.Context, params *CommitInvoiceParams) (*CommitInvoiceNoContent, error)
 
 	/*
 		CreateExternalCharges creates external charge s
+
+		resource description
 	*/
 	CreateExternalCharges(ctx context.Context, params *CreateExternalChargesParams) (*CreateExternalChargesCreated, error)
 
 	/*
 		CreateFutureInvoice triggers an invoice generation
+
+		resource description
 	*/
 	CreateFutureInvoice(ctx context.Context, params *CreateFutureInvoiceParams) (*CreateFutureInvoiceCreated, error)
 
 	/*
 		CreateInstantPayment triggers a payment for invoice
+
+		resource description
 	*/
 	CreateInstantPayment(ctx context.Context, params *CreateInstantPaymentParams) (*CreateInstantPaymentCreated, *CreateInstantPaymentNoContent, error)
 
 	/*
 		CreateInvoiceCustomFields adds custom fields to invoice
+
+		resource description
 	*/
 	CreateInvoiceCustomFields(ctx context.Context, params *CreateInvoiceCustomFieldsParams) (*CreateInvoiceCustomFieldsCreated, error)
 
 	/*
 		CreateInvoiceTags adds tags to invoice
+
+		resource description
 	*/
 	CreateInvoiceTags(ctx context.Context, params *CreateInvoiceTagsParams) (*CreateInvoiceTagsCreated, error)
 
 	/*
 		CreateMigrationInvoice creates a migration invoice
+
+		resource description
 	*/
 	CreateMigrationInvoice(ctx context.Context, params *CreateMigrationInvoiceParams) (*CreateMigrationInvoiceCreated, error)
 
 	/*
 		CreateTaxItems creates tax items
+
+		resource description
 	*/
 	CreateTaxItems(ctx context.Context, params *CreateTaxItemsParams) (*CreateTaxItemsCreated, error)
 
 	/*
 		DeleteCBA deletes a c b a item
+
+		resource description
 	*/
 	DeleteCBA(ctx context.Context, params *DeleteCBAParams) (*DeleteCBANoContent, error)
 
 	/*
 		DeleteInvoiceCustomFields removes custom fields from invoice
+
+		resource description
 	*/
 	DeleteInvoiceCustomFields(ctx context.Context, params *DeleteInvoiceCustomFieldsParams) (*DeleteInvoiceCustomFieldsNoContent, error)
 
 	/*
 		DeleteInvoiceTags removes tags from invoice
+
+		resource description
 	*/
 	DeleteInvoiceTags(ctx context.Context, params *DeleteInvoiceTagsParams) (*DeleteInvoiceTagsNoContent, error)
 
 	/*
 		GenerateDryRunInvoice generates a dry run invoice
+
+		resource description
 	*/
 	GenerateDryRunInvoice(ctx context.Context, params *GenerateDryRunInvoiceParams) (*GenerateDryRunInvoiceOK, *GenerateDryRunInvoiceNoContent, error)
 
 	/*
 		GetCatalogTranslation retrieves the catalog translation for the tenant
+
+		resource description
 	*/
 	GetCatalogTranslation(ctx context.Context, params *GetCatalogTranslationParams) (*GetCatalogTranslationOK, error)
 
 	/*
 		GetInvoice retrieves an invoice by id
+
+		resource description
 	*/
 	GetInvoice(ctx context.Context, params *GetInvoiceParams) (*GetInvoiceOK, error)
 
 	/*
 		GetInvoiceAsHTML renders an invoice as HTML
+
+		resource description
 	*/
 	GetInvoiceAsHTML(ctx context.Context, params *GetInvoiceAsHTMLParams) (*GetInvoiceAsHTMLOK, error)
 
 	/*
 		GetInvoiceAuditLogsWithHistory retrieves invoice audit logs with history by id
+
+		resource description
 	*/
 	GetInvoiceAuditLogsWithHistory(ctx context.Context, params *GetInvoiceAuditLogsWithHistoryParams) (*GetInvoiceAuditLogsWithHistoryOK, error)
 
 	/*
 		GetInvoiceByItemID retrieves an invoice by invoice item id
+
+		resource description
 	*/
 	GetInvoiceByItemID(ctx context.Context, params *GetInvoiceByItemIDParams) (*GetInvoiceByItemIDOK, error)
 
 	/*
 		GetInvoiceByNumber retrieves an invoice by number
+
+		resource description
 	*/
 	GetInvoiceByNumber(ctx context.Context, params *GetInvoiceByNumberParams) (*GetInvoiceByNumberOK, error)
 
 	/*
 		GetInvoiceCustomFields retrieves invoice custom fields
+
+		resource description
 	*/
 	GetInvoiceCustomFields(ctx context.Context, params *GetInvoiceCustomFieldsParams) (*GetInvoiceCustomFieldsOK, error)
 
 	/*
 		GetInvoiceMPTemplate retrieves the manual pay invoice template for the tenant
+
+		resource description
 	*/
 	GetInvoiceMPTemplate(ctx context.Context, params *GetInvoiceMPTemplateParams) (*GetInvoiceMPTemplateOK, error)
 
 	/*
 		GetInvoiceTags retrieves invoice tags
+
+		resource description
 	*/
 	GetInvoiceTags(ctx context.Context, params *GetInvoiceTagsParams) (*GetInvoiceTagsOK, error)
 
 	/*
 		GetInvoiceTemplate retrieves the invoice template for the tenant
+
+		resource description
 	*/
 	GetInvoiceTemplate(ctx context.Context, params *GetInvoiceTemplateParams) (*GetInvoiceTemplateOK, error)
 
 	/*
 		GetInvoiceTranslation retrieves the invoice translation for the tenant
+
+		resource description
 	*/
 	GetInvoiceTranslation(ctx context.Context, params *GetInvoiceTranslationParams) (*GetInvoiceTranslationOK, error)
 
 	/*
 		GetInvoices lists invoices
+
+		resource description
 	*/
 	GetInvoices(ctx context.Context, params *GetInvoicesParams) (*GetInvoicesOK, error)
 
 	/*
 		GetPaymentsForInvoice retrieves payments associated with an invoice
+
+		resource description
 	*/
 	GetPaymentsForInvoice(ctx context.Context, params *GetPaymentsForInvoiceParams) (*GetPaymentsForInvoiceOK, error)
 
 	/*
 		ModifyInvoiceCustomFields modifies custom fields to invoice
+
+		resource description
 	*/
 	ModifyInvoiceCustomFields(ctx context.Context, params *ModifyInvoiceCustomFieldsParams) (*ModifyInvoiceCustomFieldsNoContent, error)
 
 	/*
 		SearchInvoices searches invoices
+
+		resource description
 	*/
 	SearchInvoices(ctx context.Context, params *SearchInvoicesParams) (*SearchInvoicesOK, error)
 
 	/*
 		UploadCatalogTranslation uploads the catalog translation for the tenant
+
+		resource description
 	*/
 	UploadCatalogTranslation(ctx context.Context, params *UploadCatalogTranslationParams) (*UploadCatalogTranslationCreated, error)
 
 	/*
 		UploadInvoiceMPTemplate uploads the manual pay invoice template for the tenant
+
+		resource description
 	*/
 	UploadInvoiceMPTemplate(ctx context.Context, params *UploadInvoiceMPTemplateParams) (*UploadInvoiceMPTemplateOK, error)
 
 	/*
 		UploadInvoiceTemplate uploads the invoice template for the tenant
+
+		resource description
 	*/
 	UploadInvoiceTemplate(ctx context.Context, params *UploadInvoiceTemplateParams) (*UploadInvoiceTemplateCreated, error)
 
 	/*
 		UploadInvoiceTranslation uploads the invoice translation for the tenant
+
+		resource description
 	*/
 	UploadInvoiceTranslation(ctx context.Context, params *UploadInvoiceTranslationParams) (*UploadInvoiceTranslationCreated, error)
 
 	/*
 		VoidInvoice performs the action of voiding an invoice
+
+		resource description
 	*/
 	VoidInvoice(ctx context.Context, params *VoidInvoiceParams) (*VoidInvoiceNoContent, error)
 }
 
 /*
 AdjustInvoiceItem adjusts an invoice item
+
+resource description
 */
 func (a *Client) AdjustInvoiceItem(ctx context.Context, params *AdjustInvoiceItemParams) (*AdjustInvoiceItemCreated, error) {
 	// TODO: Validate the params before sending
@@ -293,6 +361,8 @@ func (a *Client) AdjustInvoiceItem(ctx context.Context, params *AdjustInvoiceIte
 
 /*
 CommitInvoice performs the invoice status transition from d r a f t to c o m m i t t e d
+
+resource description
 */
 func (a *Client) CommitInvoice(ctx context.Context, params *CommitInvoiceParams) (*CommitInvoiceNoContent, error) {
 	// TODO: Validate the params before sending
@@ -349,6 +419,8 @@ func (a *Client) CommitInvoice(ctx context.Context, params *CommitInvoiceParams)
 
 /*
 CreateExternalCharges creates external charge s
+
+resource description
 */
 func (a *Client) CreateExternalCharges(ctx context.Context, params *CreateExternalChargesParams) (*CreateExternalChargesCreated, error) {
 	// TODO: Validate the params before sending
@@ -423,6 +495,8 @@ func (a *Client) CreateExternalCharges(ctx context.Context, params *CreateExtern
 
 /*
 CreateFutureInvoice triggers an invoice generation
+
+resource description
 */
 func (a *Client) CreateFutureInvoice(ctx context.Context, params *CreateFutureInvoiceParams) (*CreateFutureInvoiceCreated, error) {
 	// TODO: Validate the params before sending
@@ -497,6 +571,8 @@ func (a *Client) CreateFutureInvoice(ctx context.Context, params *CreateFutureIn
 
 /*
 CreateInstantPayment triggers a payment for invoice
+
+resource description
 */
 func (a *Client) CreateInstantPayment(ctx context.Context, params *CreateInstantPaymentParams) (*CreateInstantPaymentCreated, *CreateInstantPaymentNoContent, error) {
 	// TODO: Validate the params before sending
@@ -554,6 +630,8 @@ func (a *Client) CreateInstantPayment(ctx context.Context, params *CreateInstant
 
 /*
 CreateInvoiceCustomFields adds custom fields to invoice
+
+resource description
 */
 func (a *Client) CreateInvoiceCustomFields(ctx context.Context, params *CreateInvoiceCustomFieldsParams) (*CreateInvoiceCustomFieldsCreated, error) {
 	// TODO: Validate the params before sending
@@ -628,6 +706,8 @@ func (a *Client) CreateInvoiceCustomFields(ctx context.Context, params *CreateIn
 
 /*
 CreateInvoiceTags adds tags to invoice
+
+resource description
 */
 func (a *Client) CreateInvoiceTags(ctx context.Context, params *CreateInvoiceTagsParams) (*CreateInvoiceTagsCreated, error) {
 	// TODO: Validate the params before sending
@@ -702,6 +782,8 @@ func (a *Client) CreateInvoiceTags(ctx context.Context, params *CreateInvoiceTag
 
 /*
 CreateMigrationInvoice creates a migration invoice
+
+resource description
 */
 func (a *Client) CreateMigrationInvoice(ctx context.Context, params *CreateMigrationInvoiceParams) (*CreateMigrationInvoiceCreated, error) {
 	// TODO: Validate the params before sending
@@ -776,6 +858,8 @@ func (a *Client) CreateMigrationInvoice(ctx context.Context, params *CreateMigra
 
 /*
 CreateTaxItems creates tax items
+
+resource description
 */
 func (a *Client) CreateTaxItems(ctx context.Context, params *CreateTaxItemsParams) (*CreateTaxItemsCreated, error) {
 	// TODO: Validate the params before sending
@@ -850,6 +934,8 @@ func (a *Client) CreateTaxItems(ctx context.Context, params *CreateTaxItemsParam
 
 /*
 DeleteCBA deletes a c b a item
+
+resource description
 */
 func (a *Client) DeleteCBA(ctx context.Context, params *DeleteCBAParams) (*DeleteCBANoContent, error) {
 	// TODO: Validate the params before sending
@@ -906,6 +992,8 @@ func (a *Client) DeleteCBA(ctx context.Context, params *DeleteCBAParams) (*Delet
 
 /*
 DeleteInvoiceCustomFields removes custom fields from invoice
+
+resource description
 */
 func (a *Client) DeleteInvoiceCustomFields(ctx context.Context, params *DeleteInvoiceCustomFieldsParams) (*DeleteInvoiceCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -962,6 +1050,8 @@ func (a *Client) DeleteInvoiceCustomFields(ctx context.Context, params *DeleteIn
 
 /*
 DeleteInvoiceTags removes tags from invoice
+
+resource description
 */
 func (a *Client) DeleteInvoiceTags(ctx context.Context, params *DeleteInvoiceTagsParams) (*DeleteInvoiceTagsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1018,6 +1108,8 @@ func (a *Client) DeleteInvoiceTags(ctx context.Context, params *DeleteInvoiceTag
 
 /*
 GenerateDryRunInvoice generates a dry run invoice
+
+resource description
 */
 func (a *Client) GenerateDryRunInvoice(ctx context.Context, params *GenerateDryRunInvoiceParams) (*GenerateDryRunInvoiceOK, *GenerateDryRunInvoiceNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1075,6 +1167,8 @@ func (a *Client) GenerateDryRunInvoice(ctx context.Context, params *GenerateDryR
 
 /*
 GetCatalogTranslation retrieves the catalog translation for the tenant
+
+resource description
 */
 func (a *Client) GetCatalogTranslation(ctx context.Context, params *GetCatalogTranslationParams) (*GetCatalogTranslationOK, error) {
 	// TODO: Validate the params before sending
@@ -1119,6 +1213,8 @@ func (a *Client) GetCatalogTranslation(ctx context.Context, params *GetCatalogTr
 
 /*
 GetInvoice retrieves an invoice by id
+
+resource description
 */
 func (a *Client) GetInvoice(ctx context.Context, params *GetInvoiceParams) (*GetInvoiceOK, error) {
 	// TODO: Validate the params before sending
@@ -1163,6 +1259,8 @@ func (a *Client) GetInvoice(ctx context.Context, params *GetInvoiceParams) (*Get
 
 /*
 GetInvoiceAsHTML renders an invoice as HTML
+
+resource description
 */
 func (a *Client) GetInvoiceAsHTML(ctx context.Context, params *GetInvoiceAsHTMLParams) (*GetInvoiceAsHTMLOK, error) {
 	// TODO: Validate the params before sending
@@ -1207,6 +1305,8 @@ func (a *Client) GetInvoiceAsHTML(ctx context.Context, params *GetInvoiceAsHTMLP
 
 /*
 GetInvoiceAuditLogsWithHistory retrieves invoice audit logs with history by id
+
+resource description
 */
 func (a *Client) GetInvoiceAuditLogsWithHistory(ctx context.Context, params *GetInvoiceAuditLogsWithHistoryParams) (*GetInvoiceAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -1251,6 +1351,8 @@ func (a *Client) GetInvoiceAuditLogsWithHistory(ctx context.Context, params *Get
 
 /*
 GetInvoiceByItemID retrieves an invoice by invoice item id
+
+resource description
 */
 func (a *Client) GetInvoiceByItemID(ctx context.Context, params *GetInvoiceByItemIDParams) (*GetInvoiceByItemIDOK, error) {
 	// TODO: Validate the params before sending
@@ -1295,6 +1397,8 @@ func (a *Client) GetInvoiceByItemID(ctx context.Context, params *GetInvoiceByIte
 
 /*
 GetInvoiceByNumber retrieves an invoice by number
+
+resource description
 */
 func (a *Client) GetInvoiceByNumber(ctx context.Context, params *GetInvoiceByNumberParams) (*GetInvoiceByNumberOK, error) {
 	// TODO: Validate the params before sending
@@ -1339,6 +1443,8 @@ func (a *Client) GetInvoiceByNumber(ctx context.Context, params *GetInvoiceByNum
 
 /*
 GetInvoiceCustomFields retrieves invoice custom fields
+
+resource description
 */
 func (a *Client) GetInvoiceCustomFields(ctx context.Context, params *GetInvoiceCustomFieldsParams) (*GetInvoiceCustomFieldsOK, error) {
 	// TODO: Validate the params before sending
@@ -1383,6 +1489,8 @@ func (a *Client) GetInvoiceCustomFields(ctx context.Context, params *GetInvoiceC
 
 /*
 GetInvoiceMPTemplate retrieves the manual pay invoice template for the tenant
+
+resource description
 */
 func (a *Client) GetInvoiceMPTemplate(ctx context.Context, params *GetInvoiceMPTemplateParams) (*GetInvoiceMPTemplateOK, error) {
 	// TODO: Validate the params before sending
@@ -1427,6 +1535,8 @@ func (a *Client) GetInvoiceMPTemplate(ctx context.Context, params *GetInvoiceMPT
 
 /*
 GetInvoiceTags retrieves invoice tags
+
+resource description
 */
 func (a *Client) GetInvoiceTags(ctx context.Context, params *GetInvoiceTagsParams) (*GetInvoiceTagsOK, error) {
 	// TODO: Validate the params before sending
@@ -1471,6 +1581,8 @@ func (a *Client) GetInvoiceTags(ctx context.Context, params *GetInvoiceTagsParam
 
 /*
 GetInvoiceTemplate retrieves the invoice template for the tenant
+
+resource description
 */
 func (a *Client) GetInvoiceTemplate(ctx context.Context, params *GetInvoiceTemplateParams) (*GetInvoiceTemplateOK, error) {
 	// TODO: Validate the params before sending
@@ -1515,6 +1627,8 @@ func (a *Client) GetInvoiceTemplate(ctx context.Context, params *GetInvoiceTempl
 
 /*
 GetInvoiceTranslation retrieves the invoice translation for the tenant
+
+resource description
 */
 func (a *Client) GetInvoiceTranslation(ctx context.Context, params *GetInvoiceTranslationParams) (*GetInvoiceTranslationOK, error) {
 	// TODO: Validate the params before sending
@@ -1559,6 +1673,8 @@ func (a *Client) GetInvoiceTranslation(ctx context.Context, params *GetInvoiceTr
 
 /*
 GetInvoices lists invoices
+
+resource description
 */
 func (a *Client) GetInvoices(ctx context.Context, params *GetInvoicesParams) (*GetInvoicesOK, error) {
 	// TODO: Validate the params before sending
@@ -1603,6 +1719,8 @@ func (a *Client) GetInvoices(ctx context.Context, params *GetInvoicesParams) (*G
 
 /*
 GetPaymentsForInvoice retrieves payments associated with an invoice
+
+resource description
 */
 func (a *Client) GetPaymentsForInvoice(ctx context.Context, params *GetPaymentsForInvoiceParams) (*GetPaymentsForInvoiceOK, error) {
 	// TODO: Validate the params before sending
@@ -1647,6 +1765,8 @@ func (a *Client) GetPaymentsForInvoice(ctx context.Context, params *GetPaymentsF
 
 /*
 ModifyInvoiceCustomFields modifies custom fields to invoice
+
+resource description
 */
 func (a *Client) ModifyInvoiceCustomFields(ctx context.Context, params *ModifyInvoiceCustomFieldsParams) (*ModifyInvoiceCustomFieldsNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1703,6 +1823,8 @@ func (a *Client) ModifyInvoiceCustomFields(ctx context.Context, params *ModifyIn
 
 /*
 SearchInvoices searches invoices
+
+resource description
 */
 func (a *Client) SearchInvoices(ctx context.Context, params *SearchInvoicesParams) (*SearchInvoicesOK, error) {
 	// TODO: Validate the params before sending
@@ -1747,6 +1869,8 @@ func (a *Client) SearchInvoices(ctx context.Context, params *SearchInvoicesParam
 
 /*
 UploadCatalogTranslation uploads the catalog translation for the tenant
+
+resource description
 */
 func (a *Client) UploadCatalogTranslation(ctx context.Context, params *UploadCatalogTranslationParams) (*UploadCatalogTranslationCreated, error) {
 	// TODO: Validate the params before sending
@@ -1821,6 +1945,8 @@ func (a *Client) UploadCatalogTranslation(ctx context.Context, params *UploadCat
 
 /*
 UploadInvoiceMPTemplate uploads the manual pay invoice template for the tenant
+
+resource description
 */
 func (a *Client) UploadInvoiceMPTemplate(ctx context.Context, params *UploadInvoiceMPTemplateParams) (*UploadInvoiceMPTemplateOK, error) {
 	// TODO: Validate the params before sending
@@ -1877,6 +2003,8 @@ func (a *Client) UploadInvoiceMPTemplate(ctx context.Context, params *UploadInvo
 
 /*
 UploadInvoiceTemplate uploads the invoice template for the tenant
+
+resource description
 */
 func (a *Client) UploadInvoiceTemplate(ctx context.Context, params *UploadInvoiceTemplateParams) (*UploadInvoiceTemplateCreated, error) {
 	// TODO: Validate the params before sending
@@ -1951,6 +2079,8 @@ func (a *Client) UploadInvoiceTemplate(ctx context.Context, params *UploadInvoic
 
 /*
 UploadInvoiceTranslation uploads the invoice translation for the tenant
+
+resource description
 */
 func (a *Client) UploadInvoiceTranslation(ctx context.Context, params *UploadInvoiceTranslationParams) (*UploadInvoiceTranslationCreated, error) {
 	// TODO: Validate the params before sending
@@ -2025,6 +2155,8 @@ func (a *Client) UploadInvoiceTranslation(ctx context.Context, params *UploadInv
 
 /*
 VoidInvoice performs the action of voiding an invoice
+
+resource description
 */
 func (a *Client) VoidInvoice(ctx context.Context, params *VoidInvoiceParams) (*VoidInvoiceNoContent, error) {
 	// TODO: Validate the params before sending

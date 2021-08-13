@@ -52,22 +52,30 @@ type Client struct {
 type IUsage interface {
 	/*
 		GetAllUsage retrieves usage for a subscription
+
+		resource description
 	*/
 	GetAllUsage(ctx context.Context, params *GetAllUsageParams) (*GetAllUsageOK, error)
 
 	/*
 		GetUsage retrieves usage for a subscription and unit type
+
+		resource description
 	*/
 	GetUsage(ctx context.Context, params *GetUsageParams) (*GetUsageOK, error)
 
 	/*
 		RecordUsage records usage for a subscription
+
+		resource description
 	*/
 	RecordUsage(ctx context.Context, params *RecordUsageParams) (*RecordUsageOK, error)
 }
 
 /*
 GetAllUsage retrieves usage for a subscription
+
+resource description
 */
 func (a *Client) GetAllUsage(ctx context.Context, params *GetAllUsageParams) (*GetAllUsageOK, error) {
 	// TODO: Validate the params before sending
@@ -112,6 +120,8 @@ func (a *Client) GetAllUsage(ctx context.Context, params *GetAllUsageParams) (*G
 
 /*
 GetUsage retrieves usage for a subscription and unit type
+
+resource description
 */
 func (a *Client) GetUsage(ctx context.Context, params *GetUsageParams) (*GetUsageOK, error) {
 	// TODO: Validate the params before sending
@@ -156,6 +166,8 @@ func (a *Client) GetUsage(ctx context.Context, params *GetUsageParams) (*GetUsag
 
 /*
 RecordUsage records usage for a subscription
+
+resource description
 */
 func (a *Client) RecordUsage(ctx context.Context, params *RecordUsageParams) (*RecordUsageOK, error) {
 	// TODO: Validate the params before sending

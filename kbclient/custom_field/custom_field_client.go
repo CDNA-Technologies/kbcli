@@ -52,27 +52,37 @@ type Client struct {
 type ICustomField interface {
 	/*
 		GetCustomFieldAuditLogsWithHistory retrieves custom field audit logs with history by id
+
+		resource description
 	*/
 	GetCustomFieldAuditLogsWithHistory(ctx context.Context, params *GetCustomFieldAuditLogsWithHistoryParams) (*GetCustomFieldAuditLogsWithHistoryOK, error)
 
 	/*
 		GetCustomFields lists custom fields
+
+		resource description
 	*/
 	GetCustomFields(ctx context.Context, params *GetCustomFieldsParams) (*GetCustomFieldsOK, error)
 
 	/*
 		SearchCustomFields searches custom fields
+
+		resource description
 	*/
 	SearchCustomFields(ctx context.Context, params *SearchCustomFieldsParams) (*SearchCustomFieldsOK, error)
 
 	/*
 		SearchCustomFieldsByTypeName searches custom fields by type name and optional value
+
+		resource description
 	*/
 	SearchCustomFieldsByTypeName(ctx context.Context, params *SearchCustomFieldsByTypeNameParams) (*SearchCustomFieldsByTypeNameOK, error)
 }
 
 /*
 GetCustomFieldAuditLogsWithHistory retrieves custom field audit logs with history by id
+
+resource description
 */
 func (a *Client) GetCustomFieldAuditLogsWithHistory(ctx context.Context, params *GetCustomFieldAuditLogsWithHistoryParams) (*GetCustomFieldAuditLogsWithHistoryOK, error) {
 	// TODO: Validate the params before sending
@@ -117,6 +127,8 @@ func (a *Client) GetCustomFieldAuditLogsWithHistory(ctx context.Context, params 
 
 /*
 GetCustomFields lists custom fields
+
+resource description
 */
 func (a *Client) GetCustomFields(ctx context.Context, params *GetCustomFieldsParams) (*GetCustomFieldsOK, error) {
 	// TODO: Validate the params before sending
@@ -161,6 +173,8 @@ func (a *Client) GetCustomFields(ctx context.Context, params *GetCustomFieldsPar
 
 /*
 SearchCustomFields searches custom fields
+
+resource description
 */
 func (a *Client) SearchCustomFields(ctx context.Context, params *SearchCustomFieldsParams) (*SearchCustomFieldsOK, error) {
 	// TODO: Validate the params before sending
@@ -205,6 +219,8 @@ func (a *Client) SearchCustomFields(ctx context.Context, params *SearchCustomFie
 
 /*
 SearchCustomFieldsByTypeName searches custom fields by type name and optional value
+
+resource description
 */
 func (a *Client) SearchCustomFieldsByTypeName(ctx context.Context, params *SearchCustomFieldsByTypeNameParams) (*SearchCustomFieldsByTypeNameOK, error) {
 	// TODO: Validate the params before sending

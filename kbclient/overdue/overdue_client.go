@@ -9,8 +9,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/CDNA-Technologies/kbcli/v3/kbcommon"
 	"github.com/go-openapi/runtime"
-	"github.com/killbill/kbcli/v2/kbcommon"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -53,27 +53,37 @@ type Client struct {
 type IOverdue interface {
 	/*
 		GetOverdueConfigJSON retrieves the overdue config as JSON
+
+		resource description
 	*/
 	GetOverdueConfigJSON(ctx context.Context, params *GetOverdueConfigJSONParams) (*GetOverdueConfigJSONOK, error)
 
 	/*
 		GetOverdueConfigXML retrieves the overdue config as XML
+
+		resource description
 	*/
 	GetOverdueConfigXML(ctx context.Context, params *GetOverdueConfigXMLParams) (*GetOverdueConfigXMLOK, error)
 
 	/*
 		UploadOverdueConfigJSON uploads the full overdue config as JSON
+
+		resource description
 	*/
 	UploadOverdueConfigJSON(ctx context.Context, params *UploadOverdueConfigJSONParams) (*UploadOverdueConfigJSONCreated, error)
 
 	/*
 		UploadOverdueConfigXML uploads the full overdue config as XML
+
+		resource description
 	*/
 	UploadOverdueConfigXML(ctx context.Context, params *UploadOverdueConfigXMLParams) (*UploadOverdueConfigXMLCreated, error)
 }
 
 /*
 GetOverdueConfigJSON retrieves the overdue config as JSON
+
+resource description
 */
 func (a *Client) GetOverdueConfigJSON(ctx context.Context, params *GetOverdueConfigJSONParams) (*GetOverdueConfigJSONOK, error) {
 	// TODO: Validate the params before sending
@@ -118,6 +128,8 @@ func (a *Client) GetOverdueConfigJSON(ctx context.Context, params *GetOverdueCon
 
 /*
 GetOverdueConfigXML retrieves the overdue config as XML
+
+resource description
 */
 func (a *Client) GetOverdueConfigXML(ctx context.Context, params *GetOverdueConfigXMLParams) (*GetOverdueConfigXMLOK, error) {
 	// TODO: Validate the params before sending
@@ -162,6 +174,8 @@ func (a *Client) GetOverdueConfigXML(ctx context.Context, params *GetOverdueConf
 
 /*
 UploadOverdueConfigJSON uploads the full overdue config as JSON
+
+resource description
 */
 func (a *Client) UploadOverdueConfigJSON(ctx context.Context, params *UploadOverdueConfigJSONParams) (*UploadOverdueConfigJSONCreated, error) {
 	// TODO: Validate the params before sending
@@ -236,6 +250,8 @@ func (a *Client) UploadOverdueConfigJSON(ctx context.Context, params *UploadOver
 
 /*
 UploadOverdueConfigXML uploads the full overdue config as XML
+
+resource description
 */
 func (a *Client) UploadOverdueConfigXML(ctx context.Context, params *UploadOverdueConfigXMLParams) (*UploadOverdueConfigXMLCreated, error) {
 	// TODO: Validate the params before sending

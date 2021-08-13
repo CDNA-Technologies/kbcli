@@ -52,17 +52,23 @@ type Client struct {
 type INodesInfo interface {
 	/*
 		GetNodesInfo retrieves all the nodes infos
+
+		resource description
 	*/
 	GetNodesInfo(ctx context.Context, params *GetNodesInfoParams) (*GetNodesInfoOK, error)
 
 	/*
 		TriggerNodeCommand triggers a node command
+
+		resource description
 	*/
 	TriggerNodeCommand(ctx context.Context, params *TriggerNodeCommandParams) (*TriggerNodeCommandAccepted, error)
 }
 
 /*
 GetNodesInfo retrieves all the nodes infos
+
+resource description
 */
 func (a *Client) GetNodesInfo(ctx context.Context, params *GetNodesInfoParams) (*GetNodesInfoOK, error) {
 	// TODO: Validate the params before sending
@@ -107,6 +113,8 @@ func (a *Client) GetNodesInfo(ctx context.Context, params *GetNodesInfoParams) (
 
 /*
 TriggerNodeCommand triggers a node command
+
+resource description
 */
 func (a *Client) TriggerNodeCommand(ctx context.Context, params *TriggerNodeCommandParams) (*TriggerNodeCommandAccepted, error) {
 	// TODO: Validate the params before sending
